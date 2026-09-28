@@ -1,0 +1,16 @@
+{
+  "name": "zimlink-academy",
+  "version": "1.0.0",
+  "description": "ZimLink Academy - DataCamp-like AI learning platform with certifications and interactive coding",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "seed": "node server/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src file: data: https://cdn.jsdelivr.net; img-src 'self' data:; worker-src blob: https://cdn.jsdelivr.net;">
+  <title>Settings — ZimLink IDE</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./vendor/bootstrap-icons/bootstrap-icons.min.css">
+  <style>
+    html, body { height: 100%; overflow: hidden; }
+    body { display: flex; flex-direction: column; background: var(--bg-panel); }
+    .settings-window-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid var(--border-soft);
+      background: var(--bg-panel); user-select: none;
+      -webkit-app-region: drag;
+    }
+    .settings-window-header span { font-size: 13px; font-weight: 600; letter-spacing: 0.5px; color: var(--fg-bright); }
+    .settings-window-header button { -webkit-app-region: no-drag; }
+    .settings-window { flex: 1; overflow-y: auto; background: var(--bg-panel); }
+    .settings-window .settings-body { max-width: 720px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="settings-window-header">
+    <span><i class="bi bi-gear" style="margin-right:8px"></i>Settings</span>
+    <button class="icon-btn" id="btn-close-settings" title="Close"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="settings-window">
+    <div class="settings-body">
+      <div class="settings-group">
+        <div class="settings-title">ACCOUNT</div>
+        <div id="account-state" class="acct-rows">
+          <div class="acct-line">Signed in as <b id="account-name">—</b> <span id="account-key" class="dim"></span></div>
+          <div class="row">
+            <button id="btn-edit-profile" class="wide">Sign in / Create account</button>
+            <button id="btn-signout" class="wide" disabled>Sign out</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-title">COMMIT AUTH</div>
+        <div id="auth-providers" class="acct-rows">
+          <div class="acct-line dim" id="commit-identity">No commit identity yet.</div>
+          <div class="row">
+            <button id="btn-gh" class="wide"><i class="bi bi-github"></i> Sign in with GitHub</button>
+            <button id="btn-google" class="wide"><i class="bi bi-google"></i> Sign in with Google</button>
+          </div>
+          <div id="github-config-wrap" class="hidden">
+            <label>GitHub OAuth App Client ID
+              <input type="text" id="gh-client-id" spellcheck="false" placeholder="Iv23liv.…">
+            </label>
+            <label>Client Secret <span class="dim">(optional)</span>
+              <input type="password" id="gh-client-secret" spellcheck="false" placeholder="••••••••">
+            </label>
+            <div class="dim" style="font-size:11px">
+              Create an OAuth app at github.com/settings/developers (enable Device Flow, grant Settings ▸ Developer settings ▸ Device authorizations), then paste its Client ID here.
+            </div>
+            <button id="btn-gh-save" class="wide">Save &amp; Sign in with GitHub</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-title">THEME</div>
+        <div class="row">
+          <button id="theme-dark" class="choice active">Dark</button>
+          <button id="theme-light" class="choice">Light</button>
+        </div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-title">AI PROVIDER</div>
+        <label>Provider
+          <select id="provider-select" title="Chat API provider"></select>
+        </label>
+        <div class="dim" id="provider-note" style="font-size:11px"></div>
+        <label>Base URL
+          <input type="text" id="provider-baseurl" spellcheck="false" placeholder="https://api.openai.com/v1">
+        </label>
+        <label>Model
+          <input type="text" id="provider-model" spellcheck="false" placeholder="model name">
+        </label>
+        <label>API Key <span class="dim">(leave blank to keep)</span>
+          <input type="password" id="provider-key" spellcheck="false" placeholder="sk-…" autocomplete="off">
+        </label>
+        <button id="btn-provider-save" class="wide">Save Provider</button>
+        <div id="provider-state" class="dim"></div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-title">AGENT</div>
+        <label>Model
+          <input type="text" id="model" spellcheck="false" title="OpenAI model name">
+        </label>
+        <label class="flex-row"><input type="checkbox" id="auto-apply-2" checked> Auto-apply agent changes</label>
+        <button id="btn-open-settings" class="wide">Open Folder</button>
+        <button id="btn-shortcuts" class="wide">Keyboard Shortcuts</button>
+      </div>
+      <div id="key-state" class="dim"></div>
+      <div id="about" class="dim"></div>
+    </div>
+  </div>
+  <div id="toast-container"></div>
+  <!-- Auth modal reused inside settings window -->
+  <div id="auth-modal" class="hidden">
+    <div class="auth-modal-box">
+      <div class="auth-modal-title" id="auth-modal-title">Sign in</div>
+      <div class="auth-modal-body" id="auth-modal-body"></div>
+      <div class="auth-modal-actions" id="auth-modal-actions"></div>
+    </div>
+  </div>
+  <script src="./settings.js"></script>
+</body>
+</html>

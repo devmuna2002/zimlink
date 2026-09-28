@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Learn AI, Python & Data Science Online | ZimLink Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="/css/style.css"/>
+<style>
+  /* Hero writer: caret types course names, erases, types next */
+  .pen-zone{display:inline-block;white-space:nowrap}
+  #pen-word{display:inline-block;min-width:1ch}
+  .pen-caret{display:inline-block;width:3px;height:.95em;background:var(--dc-green);margin-left:7px;border-radius:2px;vertical-align:-.12em;animation:penblink 1s steps(2,start) infinite}
+  @keyframes penblink{0%,100%{opacity:1}50%{opacity:0}}
+  @media (prefers-reduced-motion:reduce){.pen-caret{display:none}}</style>
+<meta name="description" content="Learn AI & Data Science at your own pace — interactive Python, ML & GenAI courses, career tracks, and verified certifications."/>
+</head>
+<body>
+<!-- ZimLink dark nav -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <button class="hamburger" id="hamburger">☰</button>
+    <a class="logo" href="/"><span class="logo-mark" style="background:transparent;border:none;box-shadow:none;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8 L12 3.5 L21 8 L12 12.5 Z" stroke="white" stroke-width="1.7" stroke-linejoin="round" fill="none"/><path d="M5 10.2 V14.8 C5 14.8 8.5 17.8 12 17.8 C15.5 17.8 19 14.8 19 14.8 V10.2" stroke="white" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12.5 V18.2" stroke="white" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="20.2" r="1.4" fill="white"/></svg></span> <span class="brand-zim" style="font-family:'Poppins',sans-serif;font-weight:800;letter-spacing:-.02em;color:white">ZimLink</span> <span class="brand-academy" style="font-family:'Poppins',sans-serif;font-weight:400;letter-spacing:-.02em;color:white">Academy</span></a>
+    <div class="nav-links">
+      <div class="nav-dropdown">
+        <a href="/catalog.html" class="nav-dropdown-trigger">Catalog <i class="bi bi-chevron-down" style="font-size:10px"></i></a>
+        <div class="nav-dropdown-menu">
+          <a href="/catalog.html">All Courses</a>
+          <a href="/catalog.html?category=Foundations">Foundations</a>
+          <a href="/catalog.html?category=Programming">Programming</a>
+          <a href="/catalog.html?category=Machine%20Learning">Machine Learning</a>
+          <a href="/catalog.html?category=Deep%20Learning">Deep Learning</a>
+          <a href="/catalog.html?category=Generative%20AI">Generative AI</a>
+          <a href="/catalog.html?category=NLP">NLP</a>
+          <a href="/catalog.html?category=Computer%20Vision">Computer Vision</a>
+          <a href="/catalog.html?category=MLOps">MLOps</a>
+          <a href="/catalog.html?category=Ethics">Ethics</a>
+        </div>
+      </div>
+      <a href="/tracks.html">Tracks</a>
+      <a href="/exams.html">Certification</a>
+      <a href="/dashboard.html">Learn</a>
+      <a href="#" style="color:#8aa0c2">For Business <i class="bi bi-box-arrow-up-right" style="font-size:10px"></i></a>
+    </div>
+    <div class="nav-actions">
+      <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="What do you want to learn?"/></div>
+      <a class="btn btn-ghost btn-sm" href="/dashboard.html" style="color:#b8c2d6;border-color:rgba(255,255,255,.12)">Log in</a>
+      <a class="btn btn-sm" href="/dashboard.html" style="background:var(--dc-green);color:var(--dc-navy);border-color:var(--dc-green)">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-backdrop" id="mobileBackdrop"></div>
+<nav class="mobile-drawer" id="mobileDrawer">
+  <div style="padding:12px 16px;border-bottom:1px solid #0a2540;display:flex;align-items:center;gap:10px">
+    <span style="width:28px;height:28px;border-radius:8px;background:var(--dc-green);display:grid;place-items:center;color:#05192d;font-weight:900">ZL</span>
+    <span style="font-weight:800;color:white">ZimLink</span> <span style="color:#8aa0c2">Academy</span>
+    <button id="drawerClose" style="margin-left:auto;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:white;display:grid;place-items:center"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <a href="/"><i class="bi bi-house-door"></i> Home</a>
+  <a href="/catalog.html"><i class="bi bi-collection"></i> Catalog</a>
+  <a href="/tracks.html"><i class="bi bi-signpost-split"></i> Tracks</a>
+  <a href="/exams.html"><i class="bi bi-patch-check"></i> Certification</a>
+  <a href="/dashboard.html"><i class="bi bi-mortarboard"></i> Learn</a>
+  <div style="margin-top:auto;padding:16px;border-top:1px solid #0a2540">
+    <a href="/dashboard.html" class="btn" style="width:100%;justify-content:center;background:var(--dc-green);color:#05192d">Create Account</a>
+  </div>
+</nav>
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="/"><i class="bi bi-house-door"></i><span>Home</span></a>
+    <a href="/catalog.html"><i class="bi bi-collection"></i><span>Catalog</span></a>
+    <a href="/tracks.html"><i class="bi bi-signpost-split"></i><span>Tracks</span></a>
+    <a href="/dashboard.html"><i class="bi bi-person"></i><span>Learn</span></a>
+  </div>
+</nav>
+<script>
+(function(){
+  const btn=document.getElementById('hamburger');
+  const drawer=document.getElementById('mobileDrawer');
+  const backdrop=document.getElementById('mobileBackdrop');
+  const closeBtn=document.getElementById('drawerClose');
+  function open(){drawer&&drawer.classList.add('open');backdrop&&backdrop.classList.add('open');document.body.style.overflow='hidden';}
+  function close(){drawer&&drawer.classList.remove('open');backdrop&&backdrop.classList.remove('open');document.body.style.overflow='';}
+  btn&&btn.addEventListener('click',open);
+  closeBtn&&closeBtn.addEventListener('click',close);
+  backdrop&&backdrop.addEventListener('click',close);
+  // highlight active
+  const path=location.pathname;
+  document.querySelectorAll('.mobile-drawer a, .bottom-nav a').forEach(a=>{
+    if(a.getAttribute('href')===path || (path==='/' && a.getAttribute('href')==='/')) a.classList.add('active');
+  });
+  // trusted-logo fallback: swap a broken logo tile for its monogram
+  window.tlogoFail=function(i){var p=i.parentNode;if(!p)return;p.classList.add('noimg');p.setAttribute('data-fb',(i.alt||'?').split(' ')[0]);i.remove();};
+})();
+</script>
+
+
+<!-- Technology filter bar — real logos — moving marquee -->
+<div class="dc-techbar marquee">
+  <div class="dc-techbar-inner">
+    <span class="dc-techbar-label">Learn:</span>
+    <a class="dc-pill" href="/catalog.html?category=Programming"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" style="width:20px;height:20px"/> Python</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/r/r-original.svg" alt="R" style="width:20px;height:20px"/> R</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="SQL" style="width:20px;height:20px"/> SQL</a>
+    <a class="dc-pill" href="/catalog.html?category=Generative%20AI"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg" alt="AI" style="width:20px;height:20px;filter:invert(1) brightness(2)"/> AI</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" style="width:20px;height:20px"/> React</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" style="width:20px;height:20px"/> Node.js</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" style="width:20px;height:20px"/> Java</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="ML" style="width:20px;height:20px"/> ML</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="DL" style="width:20px;height:20px"/> Deep Learning</a>
+    <a class="dc-pill" href="/catalog.html"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" style="width:20px;height:20px"/> Docker</a>
+    <a class="dc-pill" href="/catalog.html"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="Go" style="width:20px;height:20px"/> Go</a>
+    <a class="dc-pill" href="/catalog.html"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git" style="width:20px;height:20px"/> Git</a>
+    <span style="width:24px;flex-shrink:0"></span>
+    <span class="dc-techbar-label" aria-hidden="true">Learn:</span>
+    <a class="dc-pill" href="/catalog.html?category=Programming" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="" style="width:20px;height:20px"/> Python</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/r/r-original.svg" alt="" style="width:20px;height:20px"/> R</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="" style="width:20px;height:20px"/> SQL</a>
+    <a class="dc-pill" href="/catalog.html?category=Generative%20AI" aria-hidden="true"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg" alt="" style="width:20px;height:20px;filter:invert(1) brightness(2)"/> AI</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="" style="width:20px;height:20px"/> React</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="" style="width:20px;height:20px"/> Node.js</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="" style="width:20px;height:20px"/> Java</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="" style="width:20px;height:20px"/> ML</a>
+    <a class="dc-pill" href="/catalog.html?category=Programming" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="" style="width:20px;height:20px"/> Deep Learning</a>
+    <a class="dc-pill" href="/catalog.html" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="" style="width:20px;height:20px"/> Docker</a>
+    <a class="dc-pill" href="/catalog.html" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="" style="width:20px;height:20px"/> Go</a>
+    <a class="dc-pill" href="/catalog.html" aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="" style="width:20px;height:20px"/> Git</a>
+  </div>
+</div>
+
+<!-- Hero — ZimLink style: split, green CTA -->
+<section style="background:var(--dc-surface);border-bottom:1px solid var(--dc-border)">
+  <div class="container hero-grid" style="padding:32px 24px">
+    <div>
+      <h1 style="font-size:clamp(30px,6.5vw,42px);line-height:1.05;letter-spacing:-.04em;font-weight:900;color:var(--dc-text)">Learn<br/><span class="pen-zone"><span id="pen-word">Data Science</span><span class="pen-caret" id="pen-caret" aria-hidden="true"></span></span><br/>&amp; AI <span style="text-decoration:underline;text-decoration-color:var(--dc-green);text-decoration-thickness:8px;text-underline-offset:4px">online.</span></h1>
+      <p style="color:var(--dc-muted);font-size:16px;margin:14px 0 20px;max-width:480px;line-height:1.6">At your own pace with hands-on Python, SQL & AI courses — video + interactive coding challenges in the browser. No setup, instant feedback.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="/dashboard.html" class="btn" style="padding:14px 22px;font-size:15px">Create Your Free Account</a>
+        <a href="/tracks.html" class="btn btn-outline" style="padding:14px 18px">Explore tracks</a>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:18px;flex-wrap:wrap;align-items:center;color:var(--dc-muted);font-size:12px;font-weight:600">
+        <span><i class="bi bi-people" style="color:var(--dc-navy)"></i> 51k+ learners</span>
+        <span><i class="bi bi-star-fill" style="color:#ffb700"></i> 4.84 average</span>
+        <span><i class="bi bi-patch-check" style="color:var(--dc-green)"></i> Verified certs</span>
+      </div>
+    </div>
+    <div class="dc-hero-runner">
+      <div class="dc-runner-top">
+        <div class="dc-runner-dots">
+          <span class="dc-runner-dot" style="background:#ef4444"></span>
+          <span class="dc-runner-dot" style="background:#f59e0b"></span>
+          <span class="dc-runner-dot" style="background:#10b981"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#8aa0c2">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" style="width:14px;height:14px" alt=""/>
+          <span>exercise.py</span>
+        </div>
+        <span class="badge" style="background:rgba(3,239,98,0.1);color:var(--dc-green);border-color:rgba(3,239,98,0.25);font-size:10px;padding:2px 6px">
+          ● Interactive
+        </span>
+      </div>
+      <div class="dc-runner-body">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--dc-green);text-transform:uppercase;margin-bottom:6px">EXERCISE 1 • 100 XP</div>
+        <p style="font-size:13px;color:#cbd5e1;margin:0 0 12px 0;font-family:'Inter',sans-serif">Create a list of 3 AI fields and inspect its size:</p>
+        <div style="background:#020b14;border:1px solid #0e2744;border-radius:6px;padding:12px;position:relative">
+          <textarea id="hero-code-input" style="width:100%;background:transparent;border:none;color:#38bdf8;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;resize:none;outline:none;height:78px" spellcheck="false"># Create a list of 3 AI domains
+ai_domains = ['health', 'finance', 'vision']
+print("Active domains:", len(ai_domains))</textarea>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+          <button id="hero-btn-run" class="dc-btn-run" style="padding:7px 16px;font-size:12.5px">
+            <i class="bi bi-play-fill"></i> Run Code
+          </button>
+          <a href="/course.html?slug=ai-foundations" class="btn btn-sm" style="background:var(--dc-green);color:var(--dc-navy);font-weight:800;padding:7px 14px;font-size:12.5px">
+            Open in Course <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="dc-runner-console" id="hero-console-output">
+        <span style="color:#64748b">Click <b>Run Code</b> to execute Python in your browser without install...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trusted bar — polished dark, Zimbabwean universities — moving marquee -->
+<section style="background:linear-gradient(180deg, #0a1932 0%, #070f1f 100%);border-bottom:1px solid var(--dc-border);padding:0;overflow:hidden">
+  <div class="trusted-marquee" style="padding:14px 0">
+    <div class="trusted-track">
+      <span class="tl">Trusted by teams &amp; Zimbabwean universities</span>
+      <span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://www.uz.ac.zw/images/uz-logo-1131.jpg" alt="UZ logo" loading="lazy" onerror="(function(i){var p=i.parentNode;p.classList.add('noimg');p.setAttribute('data-fb',i.alt.split(' ')[0]);i.remove();})(this)"/></span><span class="tname">UZ</span></span><span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://www.nust.ac.zw/images/2024/08/20/logo_nust_png-180.png" alt="NUST logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">NUST</span></span><span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://www.msu.ac.zw/wp-content/uploads/2025/10/MSU-LOGO.png" alt="MSU logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">MSU</span></span><span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://www.hit.ac.zw/wp-content/uploads/2022/09/HIT_logo.png" alt="HIT logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">HIT</span></span><span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://www.google.com/s2/favicons?domain=africau.edu&sz=128" alt="AU logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">Africa University</span></span><span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://www.google.com/s2/favicons?domain=cut.ac.zw&sz=128" alt="CUT logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">CUT</span></span><span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://www.gzu.ac.zw/wp-content/uploads/2024/03/GZU-LOGO.png" alt="GZU logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">GZU</span></span><span class="tdot">•</span>
+      <span class="tpill">+ more</span>
+      <span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoft.svg" alt="Microsoft logo" loading="lazy" onerror="(function(i){var p=i.parentNode;p.classList.add('noimg');p.setAttribute('data-fb',i.alt.split(' ')[0]);i.remove();})(this)"/></span><span class="tgray">Microsoft</span></span><span class="tdot">•</span>
+      <span class="titem"><span class="tlogo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Seal_of_Leland_Stanford_Junior_University.svg/250px-Seal_of_Leland_Stanford_Junior_University.svg.png" alt="Stanford seal" loading="lazy" onerror="(function(i){var p=i.parentNode;p.classList.add('noimg');p.setAttribute('data-fb',i.alt.split(' ')[0]);i.remove();})(this)"/></span><span class="tgray">Stanford</span></span>
+      <span class="tl" aria-hidden="true">Trusted by teams &amp; Zimbabwean universities</span>
+      <span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://www.uz.ac.zw/images/uz-logo-1131.jpg" alt="" loading="lazy"/></span><span class="tname">UZ</span></span><span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://www.nust.ac.zw/images/2024/08/20/logo_nust_png-180.png" alt="NUST logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">NUST</span></span><span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://www.msu.ac.zw/wp-content/uploads/2025/10/MSU-LOGO.png" alt="MSU logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">MSU</span></span><span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://www.hit.ac.zw/wp-content/uploads/2022/09/HIT_logo.png" alt="HIT logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">HIT</span></span><span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://www.google.com/s2/favicons?domain=africau.edu&sz=128" alt="AU logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">Africa University</span></span><span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://www.google.com/s2/favicons?domain=cut.ac.zw&sz=128" alt="CUT logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">CUT</span></span><span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://www.gzu.ac.zw/wp-content/uploads/2024/03/GZU-LOGO.png" alt="GZU logo" loading="lazy" onerror="tlogoFail(this)"/></span><span class="tname">GZU</span></span><span class="tdot" aria-hidden="true">•</span>
+      <span class="tpill" aria-hidden="true">+ more</span>
+      <span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoft.svg" alt="" loading="lazy"/></span><span class="tgray">Microsoft</span></span><span class="tdot" aria-hidden="true">•</span>
+      <span class="titem" aria-hidden="true"><span class="tlogo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Seal_of_Leland_Stanford_Junior_University.svg/250px-Seal_of_Leland_Stanford_Junior_University.svg.png" alt="" loading="lazy"/></span><span class="tgray">Stanford</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- Path Tabs — Top Courses / AI / Career / Skill -->
+<section class="section" style="padding-top:24px;background:var(--dc-surface)">
+  <div class="container">
+    <div style="text-align:center;max-width:720px;margin:0 auto 20px">
+      <h2 style="font-size:28px;letter-spacing:-.03em;font-weight:900">A path for every goal</h2>
+      <p style="color:var(--dc-muted);font-size:14px;margin-top:8px">Whether you're switching careers or skill-building, find your route — top courses, AI, career tracks, and skill tracks.</p>
+    </div>
+    <!-- Tab pills -->
+    <div id="path-tabs" style="display:flex;justify-content:center;margin-bottom:16px">
+      <div style="display:inline-flex;gap:4px;padding:4px;background:var(--dc-bg);border:1px solid var(--dc-border);border-radius:999px">
+        <button class="chip active" data-path="top" style="border-radius:999px">Top Courses</button>
+        <button class="chip" data-path="ai" style="border-radius:999px">AI</button>
+        <button class="chip" data-path="career" style="border-radius:999px">Career Tracks</button>
+        <button class="chip" data-path="skill" style="border-radius:999px">Skill Tracks</button>
+      </div>
+    </div>
+    <div class="filters" id="filters" style="justify-content:center"><button class="chip active" data-f="all">All</button><button class="chip" data-f="Foundations">Foundations</button><button class="chip" data-f="Programming">Python</button><button class="chip" data-f="Machine Learning">ML</button><button class="chip" data-f="Deep Learning">Deep Learning</button><button class="chip" data-f="Generative AI">GenAI</button></div>
+    <div class="stacked" id="featured" style="margin-top:8px"></div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-top:14px" id="stack-dots"></div>
+    <div style="text-align:center;margin-top:14px"><a href="/catalog.html" class="btn btn-outline">Explore all courses <i class="bi bi-arrow-right-circle-fill"></i></a></div>
+  </div>
+</section>
+
+<!-- Career Tracks — ZimLink style: dark header card grid -->
+<section class="section" style="background:var(--dc-bg);border-top:1px solid var(--dc-border);border-bottom:1px solid var(--dc-border)">
+  <div class="container">
+    <div class="section-head"><div><h2>Career Tracks</h2><p>Go from zero to job-ready. Build a portfolio and earn a certificate.</p></div><a href="/tracks.html" class="btn btn-outline btn-sm">Explore all Career Tracks <i class="bi bi-arrow-right-circle-fill"></i></a></div>
+    <div class="grid" id="tracks"></div>
+  </div>
+</section>
+
+<!-- Skill Tracks + AI -->
+<section class="section">
+  <div class="container">
+    <div class="section-head"><div><h2>Skill Tracks & AI</h2><p>Level up on specific tools. From Python fundamentals to LLM engineering.</p></div><a href="/catalog.html" class="btn btn-outline btn-sm">View catalog</a></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px">
+      <div class="saas-panel" style="padding:16px"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dc-muted)">Skill Track • Example</div><b style="font-size:16px">SQL Fundamentals</b><p style="font-size:13px;color:var(--dc-muted);margin-top:6px">Master SQL for business. <b>26 hrs • 726k learners</b></p><div style="margin-top:10px;height:6px;background:var(--dc-bg);border-radius:999px"><i style="display:block;width:100%;height:100%;background:var(--dc-green);border-radius:999px"></i></div></div>
+      <div class="saas-panel" style="padding:16px"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dc-muted)">AI • Featured</div><b style="font-size:16px">Associate AI Engineer</b><p style="font-size:13px;color:var(--dc-muted);margin-top:6px">Train & fine-tune LLMs. <b>40 hrs • 47k learners</b></p><div style="margin-top:10px;height:6px;background:var(--dc-bg);border-radius:999px"><i style="display:block;width:85%;height:100%;background:var(--dc-navy);border-radius:999px"></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works — Hands-on / Certified / Mobile — fixed card -->
+<section class="section" style="background:var(--dc-bg);border-top:1px solid var(--dc-border);border-bottom:1px solid var(--dc-border);padding:32px 0">
+  <div class="container">
+    <div style="text-align:center;max-width:720px;margin:0 auto 24px">
+      <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--dc-green-soft);border:1px solid var(--dc-green-border);border-radius:999px;font-size:11px;font-weight:700;color:var(--dc-green);letter-spacing:.06em;text-transform:uppercase"><span style="width:6px;height:6px;border-radius:999px;background:var(--dc-green);display:inline-block"></span> Learning model</span>
+      <h2 style="font-size:26px;letter-spacing:-.03em;font-weight:900;margin-top:10px">A learning model that powers career transformation</h2>
+      <p style="color:var(--dc-muted);font-size:13.5px;margin-top:8px">Active recall, spaced repetition, and real projects — not passive video.</p>
+    </div>
+    <div class="grid">
+      <div class="card" style="padding:0;overflow:hidden;border-radius:16px;background:#ffffff;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12)">
+        <div style="height:88px;background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);display:grid;place-items:center;position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:radial-gradient(300px 120px at 20% 0%, rgba(3,239,98,.18), transparent 60%)"></div>
+          <span style="width:56px;height:56px;border-radius:14px;background:#ffffff;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,.18);position:relative;z-index:1"><i class="bi bi-code-square" style="color:#0f172a;font-size:22px"></i></span>
+          <span style="position:absolute;bottom:10px;right:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);color:white;font-size:10.5px;font-weight:700;backdrop-filter:blur(6px)">50 lessons</span>
+        </div>
+        <div style="padding:16px">
+          <h3 style="color:#0f172a">Hands-on, interactive</h3><p style="color:#475569;margin-top:6px">Short videos broken up by coding exercises. Practice immediately — retention 3× higher. Every lesson has a revision and a check.</p>
+          <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap"><span style="padding:4px 8px;border-radius:999px;background:#f1f5f9;border:1px solid #e2e8f0;color:#0f172a;font-size:11px;font-weight:600">Video + lab</span><span style="padding:4px 8px;border-radius:999px;background:#f1f5f9;border:1px solid #e2e8f0;color:#0f172a;font-size:11px;font-weight:600">Auto-graded</span></div>
+          <a href="/catalog.html" style="margin-top:14px;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#0f172a;color:white;font-size:12.5px;font-weight:700">Explore courses <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;border-radius:16px;background:#ffffff;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12)">
+        <div style="height:88px;background:linear-gradient(135deg, #0ea5e9 0%, #0f172a 100%);display:grid;place-items:center;position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:radial-gradient(300px 120px at 80% 0%, rgba(255,255,255,.14), transparent 60%)"></div>
+          <span style="width:56px;height:56px;border-radius:14px;background:#ffffff;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,.18);position:relative;z-index:1"><i class="bi bi-patch-check-fill" style="color:#0f172a;font-size:22px"></i></span>
+          <span style="position:absolute;bottom:10px;right:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);color:white;font-size:10.5px;font-weight:700;backdrop-filter:blur(6px)">RQF/EQF</span>
+        </div>
+        <div style="padding:16px">
+          <h3 style="color:#0f172a">Become certified</h3><p style="color:#475569;margin-top:6px">Prove you're job-ready. Earn proctored, RQF/EQF certifications trusted by hiring managers.</p>
+          <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap"><span style="padding:4px 8px;border-radius:999px;background:#e0f2fe;border:1px solid #bae6fd;color:#0c4a6e;font-size:11px;font-weight:600">Proctored</span><span style="padding:4px 8px;border-radius:999px;background:#e0f2fe;border:1px solid #bae6fd;color:#0c4a6e;font-size:11px;font-weight:600">QR verified</span></div>
+          <a href="/exams.html" style="margin-top:14px;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#0f172a;color:white;font-size:12.5px;font-weight:700">Explore certification <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;border-radius:16px;background:#ffffff;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12)">
+        <div style="height:88px;background:linear-gradient(135deg, #f59e0b 0%, #0f172a 100%);display:grid;place-items:center;position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:radial-gradient(300px 120px at 50% 0%, rgba(255,255,255,.12), transparent 60%)"></div>
+          <span style="width:56px;height:56px;border-radius:14px;background:#ffffff;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,.18);position:relative;z-index:1"><i class="bi bi-phone-fill" style="color:#0f172a;font-size:22px"></i></span>
+          <span style="position:absolute;bottom:10px;right:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);color:white;font-size:10.5px;font-weight:700;backdrop-filter:blur(6px)">Streaks</span>
+        </div>
+        <div style="padding:16px">
+          <h3 style="color:#0f172a">Desktop → mobile</h3><p style="color:#475569;margin-top:6px">Switch devices, keep your streak. Practice code, watch videos, and stay on track anywhere.</p>
+          <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap"><span style="padding:4px 8px;border-radius:999px;background:#fef3c7;border:1px solid #fde68a;color:#92400e;font-size:11px;font-weight:600">Offline</span><span style="padding:4px 8px;border-radius:999px;background:#fef3c7;border:1px solid #fde68a;color:#92400e;font-size:11px;font-weight:600">Sync</span></div>
+          <a href="/dashboard.html" style="margin-top:14px;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#0f172a;color:white;font-size:12.5px;font-weight:700">Go to workspace <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why 19M+ — testimonials ZimLink -->
+<section class="section">
+  <div class="container">
+    <h2 style="font-size:20px;font-weight:900;letter-spacing:-.02em;text-align:center">Why learners choose ZimLink</h2>
+    <div class="grid" style="margin-top:16px">
+      <div class="card" style="padding:16px"><p style="font-size:13px;color:var(--dc-text-2)">“As a manager, ZimLink helps my team learn new packages and solve problems faster.”</p><div style="display:flex;gap:10px;align-items:center;margin-top:12px"><span class="avatar">G</span><div><b style="font-size:13px">Tatenda Moyo</b><div style="font-size:11px;color:var(--dc-muted)">BI Manager</div></div></div></div>
+      <div class="card" style="padding:16px"><p style="font-size:13px;color:var(--dc-text-2)">“Real projects + short videos. Made complex topics easy — got me into my Masters.”</p><div style="display:flex;gap:10px;align-items:center;margin-top:12px"><span class="avatar">E</span><div><b style="font-size:13px">Anesu Ndlovu</b><div style="font-size:11px;color:var(--dc-muted)">Grad Student, UCD</div></div></div></div>
+      <div class="card" style="padding:16px"><p style="font-size:13px;color:var(--dc-text-2)">“Only ZimLink provides the interactive experience that reinforces learning — beginners to experts.”</p><div style="display:flex;gap:10px;align-items:center;margin-top:12px"><span class="avatar">S</span><div><b style="font-size:13px">Rumbidzai Chikomo</b><div style="font-size:11px;color:var(--dc-muted)">Senior Analytics, HSBC</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div style="background:var(--dc-navy);border-radius:8px;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div><h2 style="font-size:20px;letter-spacing:-.02em;color:white;font-weight:900">Ready to start?</h2><p style="color:#8aa0c2;font-size:13px;margin-top:4px">Join 19M+ learners. Create your free account — no credit card required.</p></div>
+      <a href="/dashboard.html" class="btn" style="background:var(--dc-green);color:var(--dc-navy)">Create Your Free Account →</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" style="background:var(--dc-navy);border-top:1px solid #0a2540;color:#8aa0c2">
+  <div class="container footer-grid">
+    <div><div class="logo" style="margin-bottom:8px;color:white"><span class="logo-mark" style="background:transparent;border:none;box-shadow:none;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8 L12 3.5 L21 8 L12 12.5 Z" stroke="white" stroke-width="1.7" stroke-linejoin="round" fill="none"/><path d="M5 10.2 V14.8 C5 14.8 8.5 17.8 12 17.8 C15.5 17.8 19 14.8 19 14.8 V10.2" stroke="white" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12.5 V18.2" stroke="white" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="20.2" r="1.4" fill="white"/></svg></span> <span style="font-family:'Poppins',sans-serif;font-weight:800;letter-spacing:-.02em;color:white">ZimLink</span> <span style="font-family:'Poppins',sans-serif;font-weight:400;letter-spacing:-.02em;color:white">Academy</span> <span style="font-family:'Poppins',sans-serif;font-weight:400;letter-spacing:-.02em;color:#8aa0c2">Zimbabwe</span></div><p style="color:#8aa0c2;font-size:13px">Learn AI by doing. Interactive coding, tracks, and proctored certs — now with hands-on courses.</p><p style="margin-top:10px;color:#5d6a85;font-size:11px">© 2026 ZimLink Academy • RQF/EQF/SFIA.</p></div>
+    <div><h4 style="color:white">Learn</h4><a href="/catalog.html" style="color:#8aa0c2">Catalog (49)</a><a href="/tracks.html" style="color:#8aa0c2">Career Tracks</a><a href="/exams.html" style="color:#8aa0c2">Certification</a><a href="/dashboard.html" style="color:#8aa0c2">Workspace</a></div>
+    <div><h4 style="color:white">For Business</h4><a href="#" style="color:#8aa0c2">Teams</a><a href="#" style="color:#8aa0c2">Universities</a><a href="#" style="color:#8aa0c2">Compare plans</a></div>
+    <div><h4 style="color:white">Support</h4><a href="#" style="color:#8aa0c2">Help</a><a href="#" style="color:#8aa0c2">Community</a><a href="#" style="color:#8aa0c2">Contact</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script type="module">
+import { fetchJSON, cardHTML, trackCardHTML } from '/js/app.js';
+const featuredEl = document.getElementById('featured');
+const tracksEl = document.getElementById('tracks');
+const q = document.getElementById('q');
+
+// Hero runner interaction
+const heroBtnRun = document.getElementById('hero-btn-run');
+const heroCodeInput = document.getElementById('hero-code-input');
+const heroConsoleOutput = document.getElementById('hero-console-output');
+
+if (heroBtnRun && heroCodeInput && heroConsoleOutput) {
+  heroBtnRun.addEventListener('click', async () => {
+    heroConsoleOutput.innerHTML = '<span style="color:#38bdf8"><i class="bi bi-hourglass-split"></i> Running Python in sandbox...</span>';
+    try {
+      const res = await fetchJSON('/api/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: heroCodeInput.value,
+          language: 'python'
+        })
+      });
+      if (res.success) {
+        heroConsoleOutput.innerHTML = `
+          <div style="color:var(--dc-green);font-weight:700">In [1]: ▶ Output:</div>
+          <div style="color:#f8fafc;margin:4px 0">${res.output}</div>
+          <div style="color:var(--dc-green);font-size:11px;font-weight:700">✓ Evaluated successfully • +100 XP</div>
+        `;
+      } else {
+        heroConsoleOutput.innerHTML = `<span style="color:#f87171">${res.error || 'Syntax error in Python code'}</span>`;
+      }
+    } catch (e) {
+      heroConsoleOutput.innerHTML = `<span style="color:#f87171">Failed to execute code.</span>`;
+    }
+  });
+}
+
+let allCourses = [];
+async function load(){
+  try {
+    allCourses = await fetchJSON('/api/courses');
+    render(allCourses.slice(0,6));
+  } catch (e) {
+    console.error(e);
+    featuredEl.innerHTML = '<div class="card" style="padding:24px;text-align:center"><b>Could not load courses</b><p style="color:var(--dc-muted);font-size:13px;margin-top:4px">Check your connection and retry.</p><button class="btn btn-sm" style="margin-top:10px;background:var(--dc-green);color:var(--dc-navy)" onclick="location.reload()">Retry</button></div>';
+  }
+  try {
+    const tracks = await fetchJSON('/api/tracks');
+    tracksEl.innerHTML = tracks.map(trackCardHTML).join('');
+  } catch (e) {
+    console.error(e);
+    tracksEl.innerHTML = '<div class="card" style="padding:24px;text-align:center"><b>Could not load career tracks</b></div>';
+  }
+}
+function render(list){
+  featuredEl.className='grid';
+  featuredEl.innerHTML = list.map(cardHTML).join('');
+}
+document.querySelectorAll('#filters .chip').forEach(ch=>{
+  ch.addEventListener('click',()=>{
+    document.querySelectorAll('#filters .chip').forEach(x=>x.classList.remove('active'));
+    ch.classList.add('active');
+    const f = ch.dataset.f;
+    if(f==='all') render(allCourses.slice(0,6));
+    else render(allCourses.filter(c=>c.category===f));
+  })
+});
+document.querySelectorAll('[data-path]').forEach(ch=>{
+  ch.addEventListener('click',()=>{
+    document.querySelectorAll('[data-path]').forEach(x=>x.classList.remove('active'));
+    ch.classList.add('active');
+    const p = ch.dataset.path;
+    if(p==='top') render(allCourses.slice(0,6));
+    else if(p==='ai') render(allCourses.filter(c=>c.category==='Generative AI'));
+    else if(p==='career') render(allCourses.filter(c=>['Foundations','Programming'].includes(c.category)));
+    else if(p==='skill') render(allCourses.filter(c=>['Machine Learning','Deep Learning','NLP','Computer Vision'].includes(c.category)));
+  })
+});
+q.addEventListener('keydown',e=>{
+  if(e.key==='Enter') location.href='/catalog.html?q='+encodeURIComponent(q.value);
+});
+// Hero writer: caret types a course name, erases it, types the next
+(function penWriter(){
+  const wordEl = document.getElementById('pen-word');
+  if(!wordEl) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const words = ['Data Science','Python','Machine Learning','SQL','Generative AI','Deep Learning','AI Engineering'];
+  const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+  let wi = 0;
+  (async function loop(){
+    while(true){
+      const word = words[wi % words.length];
+      for(let i=1;i<=word.length;i++){ wordEl.textContent = word.slice(0,i); await sleep(62); }
+      await sleep(1500);
+      for(let i=word.length-1;i>=0;i--){ wordEl.textContent = word.slice(0,i); await sleep(26); }
+      await sleep(320);
+      wi++;
+    }
+  })();
+})();
+load();
+</script>
+<script>
+// Watchdog: if the course grid is still empty after 7s (slow network,
+// blocked script, old cached page), show a visible retry instead of nothing.
+setTimeout(function(){
+  var f = document.getElementById('featured');
+  if(f && f.children.length === 0){
+    f.className = 'grid';
+    f.innerHTML = '<div class="card" style="padding:24px;text-align:center"><b>Courses did not load</b><p style="color:var(--dc-muted);font-size:13px;margin-top:4px">Check your connection, then retry.</p><button class="btn btn-sm" style="margin-top:10px;background:var(--dc-green);color:var(--dc-navy)" onclick="location.reload()">Reload courses</button></div>';
+  }
+}, 7000);
+</script>
+</body>
+</html>

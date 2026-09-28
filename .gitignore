@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+*.log
+release/
+release2/
+*.exe
+*.blockmap
+academy/node_modules/
+academy/server/data/*.db
+academy/server/data/*.db-shm
+academy/server/data/*.db-wal
+academy/server/data/examAttempts.json
+academy/server/data/progress.json
+academy/server/data/tracking.json
+academy/server/data/users.json
+academy/server/data/qualifications.json

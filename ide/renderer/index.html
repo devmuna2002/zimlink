@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src file: data: https://cdn.jsdelivr.net; img-src 'self' data:; worker-src blob: https://cdn.jsdelivr.net;">
+  <title>ZimLink IDE</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./vendor/bootstrap-icons/bootstrap-icons.min.css">
+</head>
+<body>
+  <!-- Top Title/Menu Bar (VS Code Header) -->
+  <header id="topbar">
+    <div class="header-left">
+      <span class="app-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+          <path d="M12 2l2 6.5L20.5 10l-6.5 2L12 18.5 10 12 3.5 10 10 8.5z" fill="currentColor"/>
+        </svg>
+      </span>
+      <!-- Menu choices -->
+      <nav class="menu-bar" id="menu-bar">
+        <span class="menu-item" data-menu="file">File</span>
+        <span class="menu-item" data-menu="edit">Edit</span>
+        <span class="menu-item" data-menu="selection">Selection</span>
+        <span class="menu-item" data-menu="view">View</span>
+        <span class="menu-item" data-menu="go">Go</span>
+        <span class="menu-item" data-menu="run">Run</span>
+        <span class="menu-item" data-menu="terminal">Terminal</span>
+        <span class="menu-item" data-menu="help">Help</span>
+      </nav>
+      <div id="menu-drop" class="hidden"></div>
+    </div>
+    
+    <!-- Centered Search/Command Pill -->
+    <div class="header-center">
+      <div class="nav-arrows">
+        <button class="nav-btn" id="btn-nav-back" title="Go Back"><i class="bi bi-chevron-left"></i></button>
+        <button class="nav-btn" id="btn-nav-forward" title="Go Forward"><i class="bi bi-chevron-right"></i></button>
+      </div>
+      <div class="command-search-pill" id="search-pill">
+        <i class="bi bi-search search-icon"></i>
+        <span id="project-title">Musha APK</span>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <!-- Layout controls matching VS Code top right toggles -->
+      <button class="layout-toggle active" id="btn-toggle-sidebar" title="Toggle Sidebar (Ctrl+B)"><i class="bi bi-layout-sidebar"></i></button>
+      <button class="layout-toggle" id="btn-toggle-panel" title="Toggle Bottom Panel (Ctrl+`)"><i class="bi bi-layout-split"></i></button>
+      <button id="btn-help" class="icon-btn" title="Keyboard shortcuts (Ctrl+Shift+/)"><i class="bi bi-question-lg"></i></button>
+      <button id="profile-btn" class="profile-icon" title="Account">
+        <span id="profile-avatar"><i class="bi bi-person-circle"></i></span>
+      </button>
+      <div id="profile-drop" class="hidden"></div>
+    </div>
+  </header>
+
+  <!-- Main Grid Surface -->
+  <div id="main">
+
+    <!-- Activity Bar (Far Left Icon column) -->
+    <div id="activitybar">
+      <button class="activity active" data-view="explorer" title="Explorer (Ctrl+Shift+E)"><i class="bi bi-folder2-open activity-ico"></i></button>
+      <button class="activity" data-view="search" title="Search Workspace"><i class="bi bi-search activity-ico"></i></button>
+      <button class="activity" data-view="git" title="Source Control"><i class="bi bi-github activity-ico"></i>
+        <span class="activity-badge hidden" id="git-badge">0</span>
+      </button>
+      <button class="activity" data-view="agent" title="ZimLink AI Agent (Ctrl+L)"><i class="bi bi-robot activity-ico"></i></button>
+      <div class="spacer"></div>
+      <button class="activity" data-view="settings" title="Settings"><i class="bi bi-gear activity-ico"></i></button>
+    </div>
+
+    <!-- Sidebar (Collapsible content column) -->
+    <aside id="sidebar">
+
+      <!-- VIEW: EXPLORER -->
+      <section id="view-explorer" class="view">
+        <div class="section-head">
+          <span>EXPLORER</span>
+          <span class="head-actions">
+            <button class="icon-btn" id="btn-new" title="New file"><i class="bi bi-file-earmark-plus"></i></button>
+            <button class="icon-btn" id="btn-collapse" title="Collapse folders"><i class="bi bi-chevron-bar-up"></i></button>
+          </span>
+        </div>
+        <!-- Open Editors Section -->
+        <div id="open-editors" class="hidden">
+          <div class="section-head sub"><span>OPEN EDITORS</span></div>
+          <div id="open-editors-list"></div>
+        </div>
+        <!-- Workspace root tree Section -->
+        <div class="section-head sub"><span id="ws-name">WORKSPACE</span></div>
+        <div id="empty-ws" class="hidden empty-state">
+          <p id="empty-msg">No folder opened.</p>
+          <button id="btn-open-empty">Open Folder</button>
+        </div>
+        <div id="tree"></div>
+      </section>
+
+      <!-- VIEW: SEARCH WORKSPACE -->
+      <section id="view-search" class="view hidden">
+        <div class="section-head"><span>SEARCH</span></div>
+        <div class="search-panel-body">
+          <div class="search-input-wrap">
+            <input type="text" id="search-input" placeholder="Search workspace..." spellcheck="false" autocomplete="off">
+            <button id="btn-clear-search" title="Clear Search">×</button>
+          </div>
+          <div id="search-results-label" class="dim"></div>
+          <div id="search-results"></div>
+        </div>
+      </section>
+
+      <!-- VIEW: SOURCE CONTROL (GIT) -->
+      <section id="view-git" class="view hidden">
+        <div class="section-head"><span>SOURCE CONTROL</span></div>
+        <div class="git-panel-body">
+          <div class="commit-box-wrap">
+            <textarea id="commit-message" rows="2" placeholder="Message (Ctrl+Enter to commit)"></textarea>
+            <div class="commit-row">
+              <label class="flex-row commit-push"><input type="checkbox" id="commit-push" checked> Push to remote</label>
+              <button id="btn-commit">Commit</button>
+            </div>
+          </div>
+          <div class="section-head sub"><span>CHANGES</span></div>
+          <div id="git-changes-list"></div>
+        </div>
+      </section>
+
+      <!-- VIEW: SETTINGS -->
+      <section id="view-settings" class="view hidden">
+        <div class="section-head"><span>SETTINGS</span></div>
+        <div class="settings-body">
+          <div class="settings-group">
+            <div class="settings-title">ACCOUNT</div>
+            <div id="account-state" class="acct-rows">
+              <div class="acct-line">Signed in as <b id="account-name">—</b> <span id="account-key" class="dim"></span></div>
+              <div class="row">
+                <button id="btn-edit-profile" class="wide">Sign in / Create account</button>
+                <button id="btn-signout" class="wide" disabled>Sign out</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-title">COMMIT AUTH</div>
+            <div id="auth-providers" class="acct-rows">
+              <div class="acct-line dim" id="commit-identity">No commit identity yet.</div>
+              <div class="row">
+                <button id="btn-gh" class="wide"><i class="bi bi-github"></i> Sign in with GitHub</button>
+                <button id="btn-google" class="wide"><i class="bi bi-google"></i> Sign in with Google</button>
+              </div>
+              <div id="github-config-wrap" class="hidden">
+                <label>GitHub OAuth App Client ID
+                  <input type="text" id="gh-client-id" spellcheck="false" placeholder="Iv23liv.…">
+                </label>
+                <label>Client Secret <span class="dim">(optional)</span>
+                  <input type="password" id="gh-client-secret" spellcheck="false" placeholder="••••••••">
+                </label>
+                <div class="dim" style="font-size:11px">
+                  Create an OAuth app at github.com/settings/developers (enable Device Flow, grant Settings ▸ Developer settings ▸ Device authorizations), then paste its Client ID here.
+                </div>
+                <button id="btn-gh-save" class="wide">Save &amp; Sign in with GitHub</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-title">THEME</div>
+            <div class="row">
+              <button id="theme-dark" class="choice active">Dark</button>
+              <button id="theme-light" class="choice">Light</button>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-title">AI PROVIDER</div>
+            <label>Provider
+              <select id="provider-select" title="Chat API provider"></select>
+            </label>
+            <div class="dim" id="provider-note" style="font-size:11px"></div>
+            <label>Base URL
+              <input type="text" id="provider-baseurl" spellcheck="false" placeholder="https://api.openai.com/v1">
+            </label>
+            <label>Model
+              <input type="text" id="provider-model" spellcheck="false" placeholder="model name">
+            </label>
+            <label>API Key <span class="dim">(leave blank to keep)</span>
+              <input type="password" id="provider-key" spellcheck="false" placeholder="sk-…" autocomplete="off">
+            </label>
+            <button id="btn-provider-save" class="wide">Save Provider</button>
+            <div id="provider-state" class="dim"></div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-title">AGENT</div>
+            <label>Model
+              <input type="text" id="model" spellcheck="false" title="OpenAI model name">
+            </label>
+            <label class="flex-row"><input type="checkbox" id="auto-apply-2" checked> Auto-apply agent changes</label>
+            <button id="btn-open-settings" class="wide">Open Folder</button>
+            <button id="btn-shortcuts" class="wide">Keyboard Shortcuts</button>
+          </div>
+          <div id="key-state" class="dim"></div>
+          <div id="about" class="dim"></div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Editor and Bottom Panel Wrapper Area -->
+    <div id="editor-wrapper">
+      
+      <!-- Upper Editor Area -->
+      <section id="editor-area">
+        <div id="tabs"></div>
+        <div id="breadcrumbs" class="dim"></div>
+        <div id="editor"></div>
+      </section>
+      
+      <!-- Collapsible Bottom Panel (Problems, Output, Terminal, Console) -->
+      <footer id="bottom-panel" class="collapsed">
+        <div class="panel-head">
+          <div class="panel-tabs">
+            <button class="panel-tab" data-tab="problems" id="tab-problems">Problems <span class="badge" id="problems-count">0</span></button>
+            <button class="panel-tab" data-tab="output" id="tab-output">Output</button>
+            <button class="panel-tab" data-tab="debug" id="tab-debug">Debug</button>
+            <button class="panel-tab active" data-tab="terminal" id="tab-terminal">Terminal</button>
+            <button class="panel-tab" data-tab="agent-run" id="tab-agent-run">Agent Console</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="panel-actions">
+            <button class="icon-btn" id="btn-clear-panel" title="Clear Console"><i class="bi bi-eraser-fill"></i></button>
+            <button class="icon-btn" id="btn-close-panel" title="Hide Bottom Panel (Ctrl+`)"><i class="bi bi-chevron-bar-down"></i></button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <!-- Problems tab container -->
+          <div id="panel-problems" class="tab-content hidden">
+            <div class="problems-view dim" id="problems-list">
+              No problems have been detected in the workspace.
+            </div>
+          </div>
+          <!-- Output logs tab container -->
+          <div id="panel-output" class="tab-content hidden">
+            <pre class="output-view" id="output-screen">Output initialized...</pre>
+          </div>
+          <!-- Debug console (windowless process capture) -->
+          <div id="panel-debug" class="tab-content hidden">
+            <div class="debug-head">
+              <span id="debug-status">Debug session idle</span>
+              <button class="icon-btn" id="btn-debug-stop" title="Stop Debug Session"><i class="bi bi-stop-fill"></i></button>
+            </div>
+            <pre class="output-view" id="debug-screen">Press F5 (or Debug Code) to run the active file in debug mode.</pre>
+          </div>
+          <!-- Terminal container -->
+          <div id="panel-terminal" class="tab-content">
+            <div class="terminal-view" id="terminal-screen" tabindex="0">
+              <pre class="terminal-output" id="term-output-text">Terminal not started — click here or press a key to open a shell session.</pre>
+              <div class="terminal-prompt-row">
+                <span id="term-pwd-line"></span>
+                <span class="term-cursor-blink">▋</span>
+              </div>
+            </div>
+          </div>
+          <!-- Agent Console mirroring the timeline -->
+          <div id="panel-agent-run" class="tab-content hidden">
+            <div class="agent-panel-console" id="bottom-agent-console">
+              Select an open file and enter an instruction in the Agent composer view to start.
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Right Agent Pane -->
+  <aside id="agent-pane" class="hidden">
+    <section id="view-agent" class="view">
+      <div class="agent-head">
+        <div class="agent-title">
+          <span class="orb" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none"><path d="M12 2l2 6.5L20.5 10l-6.5 2L12 18.5 10 12 3.5 10 10 8.5z" fill="currentColor"/></svg>
+          </span>
+          <span>Agent</span>
+        </div>
+        <div class="agent-chips">
+          <button id="chip-changes" class="chip">Changes <b id="changes-count">0</b></button>
+          <button id="chip-console" class="chip active">Console</button>
+        </div>
+      </div>
+      <label class="auto-toggle"><input type="checkbox" id="auto-apply" checked> Auto-apply changes</label>
+      <div id="console"></div>
+      <div id="slash-menu" class="hidden"></div>
+      <div id="composer">
+        <textarea id="input" rows="1" placeholder="Ask anything — Enter to run, / for commands"></textarea>
+        <div class="composer-row">
+          <span id="queue-count" class="dim hidden"></span>
+          <span class="spacer"></span>
+          <button id="btn-stop" class="ghost" disabled>Stop</button>
+          <button id="btn-send">Run</button>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+    <!-- Welcome Screen (shown when no folder is open) -->
+    <aside id="welcome" class="hidden">
+      <div class="welcome-inner">
+        <div class="welcome-brand">
+          <span class="welcome-orb" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="none"><path d="M12 2l2 6.5L20.5 10l-6.5 2L12 18.5 10 12 3.5 10 10 8.5z" fill="currentColor"/></svg>
+          </span>
+          <h1 class="welcome-title">ZimLink</h1>
+          <p class="welcome-sub">AI coding studio — turn natural language into real code.</p>
+        </div>
+
+        <div class="welcome-actions">
+          <button class="welcome-btn primary" id="w-btn-folder"><i class="bi bi-folder2-open"></i> Open Folder</button>
+          <button class="welcome-btn" id="w-btn-newfile"><i class="bi bi-file-earmark-plus"></i> New File</button>
+          <button class="welcome-btn" id="w-btn-agent"><i class="bi bi-robot"></i> Agent</button>
+          <button class="welcome-btn" id="w-btn-help"><i class="bi bi-question-lg"></i> Shortcuts</button>
+        </div>
+
+        <div class="welcome-features">
+          <div class="w-feature"><i class="bi bi-lightning-charge-fill"></i><div><b>AI Agent</b><span>Describe a task — edits applied to your code</span></div></div>
+          <div class="w-feature"><i class="bi bi-git"></i><div><b>Source Control</b><span>Review changes and commit to remote</span></div></div>
+          <div class="w-feature"><i class="bi bi-terminal"></i><div><b>Integrated Terminal</b><span>Shell right inside your workspace</span></div></div>
+          <div class="w-feature"><i class="bi bi-search"></i><div><b>Workspace Search</b><span>Find anything across your files</span></div></div>
+        </div>
+
+        <div class="welcome-composer">
+          <i class="bi bi-robot wc-ico"></i>
+          <span id="welcome-prompt">Open a folder, then ask the agent to build something…</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Status Bar (Bottom Strip) -->
+  <footer id="statusbar">
+    <div class="status-left">
+      <span class="status-git-branch" id="status-branch" title="Git Branch">
+        <i class="bi bi-git git-icon"></i>
+        <span id="branch-name">main*</span>
+      </span>
+      <span class="status-sync" title="Sync Status">
+        <i class="bi bi-arrow-repeat"></i>
+      </span>
+      <span class="status-errors" id="status-errors-tab" title="View problems">
+        <span class="error-circle"><i class="bi bi-x-circle-fill"></i></span> <span id="lbl-errors">0</span>
+        <span class="warn-triangle"><i class="bi bi-exclamation-triangle-fill"></i></span> <span id="lbl-warnings">0</span>
+      </span>
+      <span id="status-cwd" class="dim"></span>
+    </div>
+    
+    <div class="status-right">
+      <span class="status-item" id="status-cursor">Ln 1, Col 1</span>
+      <span class="status-item" id="status-spaces">Spaces: 2</span>
+      <span class="status-item" id="status-encoding">UTF-8</span>
+      <span class="status-item" id="status-eof">LF</span>
+      <span class="status-item" id="status-lang" style="text-transform: uppercase;">Plain Text</span>
+      <span class="status-item status-live-api" id="status-runtime">idle</span>
+      <span class="status-item" id="status-model" style="opacity: 0.85;"></span>
+      <span class="status-bell" title="Notifications">
+        <i class="bi bi-bell"></i>
+      </span>
+    </div>
+  </footer>
+
+  <!-- Floating Toast Notifications (Matches VS Code popup on bottom-right) -->
+  <div id="toast-container"></div>
+
+  <!-- Auth modal (GitHub device flow / Google identity) -->
+  <div id="auth-modal" class="hidden">
+    <div class="auth-modal-box">
+      <div class="auth-modal-title" id="auth-modal-title">Sign in</div>
+      <div class="auth-modal-body" id="auth-modal-body"></div>
+      <div class="auth-modal-actions" id="auth-modal-actions"></div>
+    </div>
+  </div>
+
+  <!-- Terminal landing / create account -->
+  <div id="landing" class="hidden">
+    <div class="terminal">
+      <div class="term-head">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="term-title">zal@zimlink — auth</span>
+      </div>
+      <div class="term-body" id="term-body"></div>
+      <div class="term-input-row">
+        <span class="term-prefix" id="term-prefix">zal&gt; </span>
+        <input id="term-input" spellcheck="false" autocomplete="off" autocapitalize="off"
+          placeholder="type a command and press Enter" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Command palette -->
+  <div id="palette" class="hidden">
+    <div class="palette-box">
+      <div id="palette-mode" class="dim">Command</div>
+      <input id="palette-input" spellcheck="false" autocomplete="off" placeholder="Type a command…">
+      <div id="palette-list"></div>
+    </div>
+  </div>
+
+  <!-- Help overlay -->
+  <div id="help-overlay" class="hidden">
+    <div class="help-box">
+      <h2>Keyboard shortcuts</h2>
+      <div class="help-grid">
+        <div><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd></div><span>Explorer</span>
+        <div><kbd>Ctrl</kbd>+<kbd>L</kbd></div><span>Agent panel</span>
+        <div><kbd>Ctrl</kbd>+<kbd>B</kbd></div><span>Toggle sidebar</span>
+        <div><kbd>Ctrl</kbd>+<kbd>`</kbd> (backtick)</div><span>Toggle bottom panel</span>
+        <div><kbd>Ctrl</kbd>+<kbd>P</kbd></div><span>Quick open file</span>
+        <div><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd></div><span>Command palette</span>
+        <div><kbd>Ctrl</kbd>+<kbd>W</kbd></div><span>Close tab</span>
+        <div><kbd>Ctrl</kbd>+<kbd>Tab</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Tab</kbd></div><span>Next / previous tab</span>
+        <div><kbd>Ctrl</kbd>+<kbd>S</kbd></div><span>Save file</span>
+        <div><kbd>Ctrl</kbd>+<kbd>Enter</kbd></div><span>Run agent task</span>
+        <div><kbd>Ctrl</kbd>+<kbd>K</kbd></div><span>Approve pending change</span>
+        <div><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd></div><span>Toggle dark / light theme</span>
+        <div><kbd>A</kbd> / <kbd>S</kbd></div><span>Approve / skip pending change</span>
+        <div><kbd>Esc</kbd></div><span>Close overlays / stop</span>
+      </div>
+      <h2>Slash commands</h2>
+      <div class="help-grid">
+        <div><code>/goal</code></div><span>Auto-apply all changes</span>
+        <div><code>/ask</code></div><span>Review each change</span>
+        <div><code>/changes</code></div><span>Show only file changes</span>
+        <div><code>/console</code></div><span>Show console timeline</span>
+        <div><code>/help</code></div><span>This overlay</span>
+      </div>
+      <button id="help-close">Close</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.js"></script>
+  <script src="./renderer.js"></script>
+</body>
+</html>

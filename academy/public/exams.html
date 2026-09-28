@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("zl-theme")||"light"}catch(e){}</script>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Qualifying Exams — Zim Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="/css/style.css"/>
+<style>
+  .cert-how-grid{display:grid;grid-template-columns:1fr 340px}
+  /* ===== Certification page mobile layout — stack to bounds ===== */
+  @media (max-width:720px){
+    .cert-hero{padding:30px 18px !important}
+    .cert-hero h1{font-size:31px !important;line-height:1.12}
+    .cert-how-wrap{padding:20px 14px !important}
+    .cert-how-grid{grid-template-columns:1fr;gap:18px}
+    .cert-steps p{font-size:12.5px}
+    #level-filters{flex-wrap:wrap;overflow:visible}
+    #level-filters .chip{flex-shrink:1}
+  }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="container nav-inner">
+    <button class="hamburger" id="hamburger">☰</button>
+    <a class="logo" href="/"><span class="logo-mark" style="background:transparent;border:none;box-shadow:none;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8 L12 3.5 L21 8 L12 12.5 Z" stroke="white" stroke-width="1.7" stroke-linejoin="round" fill="none"/><path d="M5 10.2 V14.8 C5 14.8 8.5 17.8 12 17.8 C15.5 17.8 19 14.8 19 14.8 V10.2" stroke="white" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12.5 V18.2" stroke="white" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="20.2" r="1.4" fill="white"/></svg></span> <span style="font-family:'Poppins',sans-serif;font-weight:800;letter-spacing:-.02em;color:white">ZimLink</span> <span style="font-family:'Poppins',sans-serif;font-weight:400;letter-spacing:-.02em;color:white">Academy</span></a>
+    <div class="nav-links">
+      <a href="/">Platform</a>
+      <a href="/catalog.html">Catalog</a>
+      <a href="/tracks.html">Solutions</a>
+      <a href="/exams.html" class="active">Certification</a>
+      <a href="/dashboard.html">Workspace</a>
+    </div>
+    <div class="nav-actions"><a href="/dashboard.html" class="btn btn-sm"><i class="bi bi-speedometer2"></i> Workspace</a></div>
+  </div>
+</nav>
+
+<div class="mobile-backdrop" id="mobileBackdrop"></div>
+<nav class="mobile-drawer" id="mobileDrawer">
+  <div style="padding:12px 16px;border-bottom:1px solid #0a2540;display:flex;align-items:center;gap:10px">
+    <span style="width:28px;height:28px;border-radius:8px;background:var(--dc-green);display:grid;place-items:center;color:#05192d;font-weight:900">ZL</span>
+    <span style="font-weight:800;color:white">ZimLink</span> <span style="color:#8aa0c2">Academy</span>
+    <button id="drawerClose" style="margin-left:auto;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:white;display:grid;place-items:center"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <a href="/"><i class="bi bi-house-door"></i> Home</a>
+  <a href="/catalog.html"><i class="bi bi-collection"></i> Catalog</a>
+  <a href="/tracks.html"><i class="bi bi-signpost-split"></i> Tracks</a>
+  <a href="/exams.html"><i class="bi bi-patch-check"></i> Certification</a>
+  <a href="/dashboard.html"><i class="bi bi-mortarboard"></i> Learn</a>
+  <div style="margin-top:auto;padding:16px;border-top:1px solid #0a2540">
+    <a href="/catalog.html" class="btn" style="width:100%;justify-content:center;background:var(--dc-green);color:#05192d">Get Started</a>
+  </div>
+</nav>
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="/"><i class="bi bi-house-door"></i><span>Home</span></a>
+    <a href="/catalog.html"><i class="bi bi-collection"></i><span>Catalog</span></a>
+    <a href="/tracks.html"><i class="bi bi-signpost-split"></i><span>Tracks</span></a>
+    <a href="/dashboard.html"><i class="bi bi-person"></i><span>Learn</span></a>
+  </div>
+</nav>
+<script>
+(function(){
+  const btn=document.getElementById('hamburger');
+  const drawer=document.getElementById('mobileDrawer');
+  const backdrop=document.getElementById('mobileBackdrop');
+  const closeBtn=document.getElementById('drawerClose');
+  function open(){drawer&&drawer.classList.add('open');backdrop&&backdrop.classList.add('open');document.body.style.overflow='hidden';}
+  function close(){drawer&&drawer.classList.remove('open');backdrop&&backdrop.classList.remove('open');document.body.style.overflow='';}
+  btn&&btn.addEventListener('click',open);
+  closeBtn&&closeBtn.addEventListener('click',close);
+  backdrop&&backdrop.addEventListener('click',close);
+  // highlight active
+  const path=location.pathname;
+  document.querySelectorAll('.mobile-drawer a, .bottom-nav a').forEach(a=>{
+    if(a.getAttribute('href')===path || (path==='/' && a.getAttribute('href')==='/')) a.classList.add('active');
+  });
+})();
+</script>
+
+
+<div style="background:linear-gradient(135deg, #0f172a 0%, #0a3d2e 50%, #0f2e1f 100%);border-bottom:1px solid #0a2540;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(600px 300px at 80% 10%, rgba(3,239,98,.12), transparent 60%);pointer-events:none"></div>
+  <div class="container cert-hero" style="padding:44px 24px;position:relative">
+    <div style="max-width:780px">
+      <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#e2e8f0;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:16px;backdrop-filter:blur(6px)"><i class="bi bi-shield-check" style="color:#03ef62;font-size:14px"></i> REGULATED COMPETENCE • RQF / EQF • SFIA</div>
+      <h1 style="font-size:44px;letter-spacing:-.04em;margin-bottom:12px;line-height:1.08;font-weight:800;color:white">Get <span style="background:linear-gradient(90deg,#03ef62,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Certified & Verified</span></h1>
+      <p style="font-size:15px;color:#cbd5e1;line-height:1.7;margin-bottom:12px">Proctored, competency-mapped exams. Pass → earn a <b style="color:white">regulated certificate</b> with QR verification, RQF/EQF level and 2–3 year validity. Every certificate is externally moderated.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <span class="badge badge-green"><i class="bi bi-shield-fill-check"></i> RQF / EQF Aligned</span>
+        <span class="badge badge-blue"><i class="bi bi-patch-check-fill"></i> 13 Exams</span>
+        <span class="badge badge-green"><i class="bi bi-stopwatch"></i> 45–120 min</span>
+        <span class="badge badge-blue"><i class="bi bi-qr-code"></i> QR Verification</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container cert-how-wrap" style="padding:28px 24px">
+  <div class="cert-how-grid" style="gap:24px;align-items:start">
+    <div>
+      <h2 style="font-size:18px;font-weight:700;margin-bottom:16px"><i class="bi bi-info-circle" style="color:var(--green-dark)"></i> How Certification Works</h2>
+      <div class="cert-steps" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:12px"><div style="width:32px;height:32px;border-radius:999px;background:var(--green);color:#0b3520;display:grid;place-items:center;font-weight:800;flex-shrink:0">1</div><div><b style="font-size:13px">Complete Courses</b><p class="muted" style="font-size:12px;margin-top:2px">Finish labs, projects & lessons.</p></div></div>
+        <div style="display:flex;gap:12px"><div style="width:32px;height:32px;border-radius:999px;background:var(--green);color:#0b3520;display:grid;place-items:center;font-weight:800;flex-shrink:0">2</div><div><b style="font-size:13px">Book Exam</b><p class="muted" style="font-size:12px;margin-top:2px">Proctored exam — 3 attempts max.</p></div></div>
+        <div style="display:flex;gap:12px"><div style="width:32px;height:32px;border-radius:999px;background:var(--green);color:#0b3520;display:grid;place-items:center;font-weight:800;flex-shrink:0">3</div><div><b style="font-size:13px">Pass & Certify</b><p class="muted" style="font-size:12px;margin-top:2px">70–75% to pass, 90%+ distinction.</p></div></div>
+        <div style="display:flex;gap:12px"><div style="width:32px;height:32px;border-radius:999px;background:var(--green);color:#0b3520;display:grid;place-items:center;font-weight:800;flex-shrink:0">4</div><div><b style="font-size:13px">Verify & Share</b><p class="muted" style="font-size:12px;margin-top:2px">QR + online verification. Valid 2–3 years.</p></div></div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,var(--bg-green) 0%,#e8faf0 100%);border:1px solid var(--green);border-radius:16px;padding:20px">
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:12px"><i class="bi bi-bullseye" style="color:#0f8f4d"></i> Pass Requirements</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--dc-surface);border-radius:10px"><span style="font-size:12px;font-weight:700">Pass</span><span style="font-weight:800;color:var(--green-dark)">70–75%</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--dc-surface);border-radius:10px"><span style="font-size:12px;font-weight:700">Distinction</span><span style="font-weight:800;color:var(--teal)">90%+</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--dc-surface);border-radius:10px"><span style="font-size:12px;font-weight:700">Attempts</span><span style="font-weight:800">3 Max</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--dc-surface);border-radius:10px"><span style="font-size:12px;font-weight:700">Validity</span><span style="font-weight:800">2–3 Years</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding:0 24px 18px">
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between">
+    <div class="filters" id="level-filters" style="margin-bottom:0">
+      <button class="chip active" data-level="all"><i class="bi bi-grid"></i> All Exams</button>
+      <button class="chip" data-level="Level 3"><i class="bi bi-award"></i> Level 3</button>
+      <button class="chip" data-level="Level 4"><i class="bi bi-patch-check-fill"></i> Level 4</button>
+      <button class="chip" data-level="Level 5"><i class="bi bi-mortarboard"></i> Level 5</button>
+      <button class="chip" data-level="proctored"><i class="bi bi-shield-fill-check"></i> Proctored Only</button>
+    </div>
+    <span class="badge" style="background:var(--dc-surface);border:1px solid var(--border);color:var(--muted)"><i class="bi bi-hash"></i> <span id="exam-count">0</span> Exams</span>
+  </div>
+</div>
+
+<div class="container" style="padding:0 24px 40px">
+  <div class="grid" id="grid" style="gap:22px"></div>
+  <div id="empty" class="card hidden" style="padding:24px;text-align:center"><b>No exams in this filter</b><p class="muted">Clear filters to see all.</p></div>
+</div>
+
+<div class="container" style="padding:0 24px 40px">
+  <div class="card" style="padding:20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:linear-gradient(135deg,#0f3d2e 0%,#0b2b1a 100%);color:#fff;border-color:#0f3d2e">
+    <div style="flex:1">
+      <div style="font-weight:800;display:flex;align-items:center;gap:8px"><i class="bi bi-building" style="color:#44d777"></i> For Employers & Verifiers</div>
+      <p style="font-size:13px;color:#a3c4b2;margin-top:4px">Every certificate carries a unique <b style="color:#fff">ZL-Q-…</b> ID. Verify at <b style="color:#fff">zimlink.academy/certificate</b> — competency breakdown, proctoring & expiry shown.</p>
+    </div>
+    <a href="/certificate.html" class="btn btn-sm" style="background:#44d777;color:#0b3520"><i class="bi bi-qr-code"></i> Verify Certificate</a>
+  </div>
+</div>
+
+<footer class="footer"><div class="container" style="display:flex;justify-content:space-between"><span>© 2026 Zim Academy</span><span class="muted">RQF / EQF / SFIA • Externally Moderated</span></div></footer>
+<div class="toast" id="toast"></div>
+<script type="module">
+import { fetchJSON, renderIcon, getUserId } from '/js/app.js';
+const grid=document.getElementById('grid');
+const empty=document.getElementById('empty');
+const countBadge=document.getElementById('exam-count');
+let all=[];
+async function load(){
+  all=await fetchJSON('/api/exams');
+  render('all');
+  try{
+    const attempts=await fetchJSON('/api/exam-attempts?userId='+getUserId());
+    window._attempts=attempts;
+    render(document.querySelector('.chip.active')?.dataset.level||'all');
+  }catch{}
+}
+function fmtTime(min){ return min<60? min+' min' : Math.floor(min/60)+'h '+(min%60? min%60+'m':''); }
+function render(filter){
+  let list=[...all];
+  if(filter && filter!=='all'){
+    if(filter==='proctored') list=list.filter(e=>e.proctored);
+    else list=list.filter(e=> (e.level||'').includes(filter));
+  }
+  countBadge.textContent=list.length;
+  if(!list.length){ grid.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  grid.innerHTML=list.map(e=>{
+    const attempts = (window._attempts && window._attempts[e.id]) ? window._attempts[e.id].length : 0;
+    const passed = (window._attempts && window._attempts[e.id]) ? window._attempts[e.id].some(a=>a.passed) : false;
+    const colour = e.parentColor || '#0f3d2e';
+    const icon = renderIcon(e.parentIcon || 'bi-patch-check');
+    return `
+    <div class="eduzac-card eduzac-card--exam" style="--cc:${colour}">
+      <div class="eduzac-banner" style="height:132px">
+        <div class="eduzac-banner-mid"></div>
+        <div class="eduzac-banner-inner">
+          <div class="eduzac-wordmark">
+            <span class="eduzac-mark">${icon}</span>
+            <span class="eduzac-word" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;max-width:180px">${e.code} • ${e.level.split(' ')[0]} ${e.level.split(' ')[1]||''}</span>
+          </div>
+          <div class="eduzac-tagline">${fmtTime(e.durationMinutes)} • ${e.totalQuestions} Qs • ${e.passMark}% pass</div>
+        </div>
+        <div class="eduzac-avatar" style="width:62px;height:62px;bottom:-28px;font-size:24px">${icon}</div>
+        ${e.proctored? `<span style="position:absolute;top:12px;right:12px;z-index:3;background:rgba(255,255,255,.95);color:#0f3d2e;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:5px;border:1px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.18)"><i class="bi bi-shield-check" style="color:#0f8f4d"></i> Proctored</span>`:''}
+        ${passed? `<span style="position:absolute;top:12px;left:12px;z-index:3;background:#44d777;color:#0b3520;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:5px"><i class="bi bi-check-circle-fill"></i> Passed</span>`:''}
+      </div>
+      <div class="eduzac-body" style="padding-top:40px">
+        <div class="eduzac-body-top"><span class="eduzac-follow" style="background:${passed?'#44d777;color:#0b3520;border-color:#44d777':'#0f3d2e'}">${passed?'<i class="bi bi-eye"></i> View':'<i class="bi bi-play-fill"></i> Start'} </span></div>
+        <div class="eduzac-name"><span>${e.title}</span> <i class="bi bi-patch-check-fill verified"></i></div>
+        <div class="eduzac-handle">${e.qualificationCode} • ${e.credits} credits • Valid ${Math.round(e.validForMonths/12)}y</div>
+        <div class="eduzac-bio" style="min-height:38px">${e.description.slice(0,95)}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+          <span class="badge" style="font-size:11px"><i class="bi bi-stopwatch"></i> ${fmtTime(e.durationMinutes)}</span>
+          <span class="badge badge-green" style="font-size:11px"><i class="bi bi-bullseye"></i> ${e.passMark}% pass</span>
+          <span class="badge" style="font-size:11px"><i class="bi bi-hash"></i> ${e.totalQuestions} Qs</span>
+          ${attempts? `<span class="badge ${passed?'badge-green':'badge-yellow'}" style="font-size:11px"><i class="bi bi-arrow-counterclockwise"></i> ${attempts}/${e.attemptsAllowed} attempts</span>`:''}
+        </div>
+        <div class="eduzac-stats" style="margin-top:4px">
+          <span><b>${e.competencies?.length||4}</b> <span class="muted" style="font-weight:500">Competencies</span></span>
+          <span><b>${e.validForMonths}</b> <span class="muted" style="font-weight:500">Months valid</span></span>
+        </div>
+        <div class="eduzac-link" style="margin-top:6px"><i class="bi bi-shield-fill-check"></i> ${e.awardingBody.split('—')[0].trim()}</div>
+        <a href="/exam.html?id=${e.id}" style="position:absolute;inset:0" aria-label="Open ${e.title}"></a>
+      </div>
+    </div>`;
+  }).join('');
+}
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    render(chip.dataset.level||'all');
+  });
+});
+load();
+</script>
+</body>
+</html>

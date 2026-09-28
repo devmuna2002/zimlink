@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>My Learning — ZimLink Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<nav class="nav">
+  <div class="container nav-inner">
+    <button class="hamburger" id="hamburger">☰</button>
+    <a class="logo" href="/"><span class="logo-mark" style="background:transparent;border:none;box-shadow:none;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8 L12 3.5 L21 8 L12 12.5 Z" stroke="white" stroke-width="1.7" stroke-linejoin="round" fill="none"/><path d="M5 10.2 V14.8 C5 14.8 8.5 17.8 12 17.8 C15.5 17.8 19 14.8 19 14.8 V10.2" stroke="white" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12.5 V18.2" stroke="white" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="20.2" r="1.4" fill="white"/></svg></span> <span style="font-family:'Poppins',sans-serif;font-weight:800;letter-spacing:-.02em;color:white">ZimLink</span> <span style="font-family:'Poppins',sans-serif;font-weight:400;letter-spacing:-.02em;color:white">Academy</span></a>
+    <div class="nav-links">
+      <a href="/catalog.html">Catalog</a>
+      <a href="/tracks.html">Tracks</a>
+      <a href="/exams.html">Certification</a>
+      <a href="/dashboard.html" class="active">Learn</a>
+    </div>
+    <div class="nav-actions">
+      <span id="user-name" class="badge" style="background:rgba(255,255,255,.1);color:white;border-color:rgba(255,255,255,.14)"><i class="bi bi-person-fill"></i> Guest</span>
+      <button id="logout" class="btn btn-ghost btn-sm" style="color:#8aa0c2;border-color:rgba(255,255,255,.12)">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-backdrop" id="mobileBackdrop"></div>
+<nav class="mobile-drawer" id="mobileDrawer">
+  <div style="padding:12px 16px;border-bottom:1px solid #0a2540;display:flex;align-items:center;gap:10px">
+    <span style="width:28px;height:28px;border-radius:8px;background:var(--dc-green);display:grid;place-items:center;color:#05192d;font-weight:900">ZL</span>
+    <span style="font-weight:800;color:white">ZimLink</span> <span style="color:#8aa0c2">Academy</span>
+    <button id="drawerClose" style="margin-left:auto;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:white;display:grid;place-items:center"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <a href="/"><i class="bi bi-house-door"></i> Home</a>
+  <a href="/catalog.html"><i class="bi bi-collection"></i> Catalog</a>
+  <a href="/tracks.html"><i class="bi bi-signpost-split"></i> Tracks</a>
+  <a href="/exams.html"><i class="bi bi-patch-check"></i> Certification</a>
+  <a href="/dashboard.html"><i class="bi bi-mortarboard"></i> Learn</a>
+  <div style="margin-top:auto;padding:16px;border-top:1px solid #0a2540">
+    <a href="/catalog.html" class="btn" style="width:100%;justify-content:center;background:var(--dc-green);color:#05192d">Get Started</a>
+  </div>
+</nav>
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="/"><i class="bi bi-house-door"></i><span>Home</span></a>
+    <a href="/catalog.html"><i class="bi bi-collection"></i><span>Catalog</span></a>
+    <a href="/tracks.html"><i class="bi bi-signpost-split"></i><span>Tracks</span></a>
+    <a href="/dashboard.html"><i class="bi bi-person"></i><span>Learn</span></a>
+  </div>
+</nav>
+<script>
+(function(){
+  const btn=document.getElementById('hamburger');
+  const drawer=document.getElementById('mobileDrawer');
+  const backdrop=document.getElementById('mobileBackdrop');
+  const closeBtn=document.getElementById('drawerClose');
+  function open(){drawer&&drawer.classList.add('open');backdrop&&backdrop.classList.add('open');document.body.style.overflow='hidden';}
+  function close(){drawer&&drawer.classList.remove('open');backdrop&&backdrop.classList.remove('open');document.body.style.overflow='';}
+  btn&&btn.addEventListener('click',open);
+  closeBtn&&closeBtn.addEventListener('click',close);
+  backdrop&&backdrop.addEventListener('click',close);
+  // highlight active
+  const path=location.pathname;
+  document.querySelectorAll('.mobile-drawer a, .bottom-nav a').forEach(a=>{
+    if(a.getAttribute('href')===path || (path==='/' && a.getAttribute('href')==='/')) a.classList.add('active');
+  });
+})();
+</script>
+
+<div class="dc-techbar"><div class="dc-techbar-inner"><span class="dc-techbar-label">My workspace:</span><span class="dc-pill active"><i class="bi bi-speedometer2"></i> Dashboard</span><a class="dc-pill" href="/catalog.html">Catalog</a><a class="dc-pill" href="/tracks.html">Tracks</a><a class="dc-pill" href="/exams.html">Certs</a></div></div>
+
+<div style="background:var(--dc-navy);color:white;border-bottom:1px solid #0a2540">
+  <div class="container" style="padding:16px 24px">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div><h1 style="font-size:22px;font-weight:900;letter-spacing:-.02em">Welcome back <span id="hello">👋</span></h1><p style="font-size:13px;color:#8aa0c2">Pick up where you left off — .</p></div>
+        <div class="dash-stats" style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap">
+        <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:10px 14px;text-align:center;min-width:90px"><div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8aa0c2;font-weight:800">Streak</div><b id="s-streak" style="font-size:16px">1 day</b></div>
+        <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:10px 14px;text-align:center;min-width:90px"><div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8aa0c2;font-weight:800">XP</div><b id="s-xp" style="font-size:16px;color:var(--dc-green)">0</b></div>
+        <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:10px 14px;text-align:center;min-width:90px"><div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8aa0c2;font-weight:800">Enrolled</div><b id="s-enrolled" style="font-size:16px">0</b></div>
+        <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:10px 14px;text-align:center;min-width:90px"><div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8aa0c2;font-weight:800">Certs</div><b id="s-certs" style="font-size:16px">0</b></div>
+      </div>
+    </div>
+    <div style="margin-top:12px;height:6px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden"><i id="xp-progress" style="display:block;height:100%;background:var(--dc-green);width:0%"></i></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:#8aa0c2;margin-top:6px"><span>Level: <b id="s-level" style="color:white">Beginner</b></span><span><span id="s-avg">—</span> avg. progress</span></div>
+  </div>
+</div>
+
+<div class="container" style="padding:16px 24px">
+  <div class="section-head" style="margin-bottom:12px"><h2><i class="bi bi-play-circle" style="color:var(--dc-green)"></i> Continue learning</h2><a href="/catalog.html" style="font-size:13px;font-weight:700;color:var(--dc-navy)">Browse catalog <i class="bi bi-arrow-right-circle-fill"></i></a></div>
+  <div class="grid" id="continue"></div>
+  <div id="continue-empty" class="card hidden" style="padding:24px;text-align:center;margin-top:12px"><b>No courses yet</b><p style="color:var(--dc-muted);margin-top:4px">Start a course — it appears here.</p><a href="/catalog.html" class="btn btn-sm" style="margin-top:10px;background:var(--dc-green);color:var(--dc-navy)">Explore courses</a></div>
+</div>
+
+<div class="container" style="padding:0 24px 16px">
+  <div class="section-head" style="margin-bottom:12px"><h2><i class="bi bi-collection-fill" style="color:var(--dc-green)"></i> All courses — available to start</h2><span class="badge badge-green">Hands-on • Enroll free</span></div>
+  <div class="grid" id="all-courses"></div>
+</div>
+
+<div class="container" style="padding:0 24px 16px">
+  <div class="dash-cols">
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--dc-border);display:flex;align-items:center;justify-content:space-between"><h3 style="font-size:14px;font-weight:800"><i class="bi bi-trophy" style="color:var(--dc-green)"></i> My certificates</h3><span class="badge badge-green">Verified • LinkedIn</span></div>
+      <div style="padding:14px">
+        <div id="certs" class="grid" style="grid-template-columns:repeat(2,1fr)"></div>
+        <div id="certs-empty" class="hidden" style="padding:20px;text-align:center;border:1px dashed var(--dc-border);border-radius:6px;background:var(--dc-bg)"><b>No certificates yet</b><p style="color:var(--dc-muted);font-size:13px">Finish a course to earn one — .</p></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--dc-border);display:flex;align-items:center;justify-content:space-between"><h3 style="font-size:13px;font-weight:800"><i class="bi bi-bar-chart" style="color:var(--dc-navy)"></i> Leaderboard</h3><span class="badge badge-neutral">This week</span></div>
+        <table class="saas-table">
+          <thead><tr><th>#</th><th>Learner</th><th>XP</th><th>Certs</th></tr></thead>
+          <tbody id="lb">
+            <tr><td>1</td><td>Rumbidzai M. <span class="badge badge-green" style="margin-left:6px">You</span></td><td id="lb-xp">0</td><td id="lb-certs">0</td></tr>
+            <tr><td>2</td><td>Tafadzwa R.</td><td>4,820</td><td>5</td></tr>
+            <tr><td>3</td><td>Nyasha T.</td><td>4,350</td><td>4</td></tr>
+            <tr><td>4</td><td>Chiedza K.</td><td>3,900</td><td>3</td></tr>
+          </tbody>
+        </table>
+        <div style="padding:10px;border-top:1px solid var(--dc-border);display:flex;gap:8px"><button class="btn btn-outline btn-sm" style="flex:1">Export</button><button class="btn btn-ghost btn-sm" style="flex:1">Invite team</button></div>
+      </div>
+      <div style="padding:12px;background:var(--dc-navy);border-radius:6px;color:white">
+        <div style="font-size:12px;font-weight:800"><i class="bi bi-phone"></i> ZimLink Mobile</div><p style="font-size:12px;color:#8aa0c2;margin-top:4px">Practice on the go — keep your streak alive anywhere.</p><a href="/catalog.html" class="btn btn-sm" style="margin-top:10px;background:var(--dc-green);color:var(--dc-navy);width:100%;justify-content:center">Get the app</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding:0 24px 24px">
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--dc-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <h3 style="font-size:14px;font-weight:800"><i class="bi bi-file-earmark-text" style="color:var(--dc-green)"></i> Academic Transcript</h3>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span class="badge badge-neutral" id="tr-summary">No exams yet</span>
+        <button class="btn btn-sm" id="tr-download" style="background:var(--dc-green);color:var(--dc-navy);font-weight:800"><i class="bi bi-download"></i> Transcript PDF</button>
+      </div>
+    </div>
+    <div style="padding:14px 16px">
+      <div id="tr-body"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal open" id="auth-modal">
+  <div class="modal-card" style="max-width:880px;padding:0;overflow:hidden;border-radius:22px;display:flex;flex-direction:column;background:radial-gradient(600px 300px at 14% 0%, rgba(3,239,98,.07), transparent 60%), radial-gradient(500px 300px at 90% 100%, rgba(14,165,233,.07), transparent 60%), var(--dc-surface);box-shadow:0 24px 64px rgba(0,0,0,.45);border:1px solid var(--dc-border)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;flex-shrink:0;background:rgba(255,255,255,.06);backdrop-filter:blur(8px)">
+      <div style="display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif">
+        <span style="width:30px;height:30px;display:grid;place-items:center;background:transparent;border:none;box-shadow:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 8 L12 3.5 L21 8 L12 12.5 Z" stroke="white" stroke-width="1.7" stroke-linejoin="round" fill="none"/><path d="M5 10.2 V14.8 C5 14.8 8.5 17.8 12 17.8 C15.5 17.8 19 14.8 19 14.8 V10.2" stroke="white" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12.5 V18.2" stroke="white" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="20.2" r="1.4" fill="white"/></svg></span>
+        <span style="font-family:'Poppins',sans-serif;font-weight:800;letter-spacing:-.02em;color:white;font-size:15px">ZimLink</span> <span style="font-family:'Poppins',sans-serif;font-weight:500;letter-spacing:-.02em;color:white;font-size:15px">Academy</span> <span style="font-family:'Poppins',sans-serif;font-weight:400;letter-spacing:-.02em;color:#a7f3d0;font-size:15px">Zimbabwe</span>
+      </div>
+      <button onclick="document.getElementById('auth-modal').classList.remove('open')" style="width:30px;height:30px;border-radius:999px;background:rgba(255,255,255,.1);border:none;color:white;display:grid;place-items:center;cursor:pointer"><i class="bi bi-x-lg" style="font-size:13px"></i></button>
+    </div>
+    <div id="auth-grid" style="display:grid;grid-template-columns:1.05fr .95fr;gap:18px;padding:18px;background:transparent">
+      <div id="auth-hero" style="position:relative;border-radius:16px;overflow:hidden;min-height:400px;background:linear-gradient(180deg, rgba(10,61,46,.12) 0%, #0a3320 100%), url('https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&auto=format&fit=crop&q=60') center/cover;display:flex;flex-direction:column;padding:24px;border:none;mask-image:radial-gradient(ellipse 82% 78% at 50% 52%, black 36%, transparent 78%);-webkit-mask-image:radial-gradient(ellipse 82% 78% at 50% 52%, black 36%, transparent 78%);filter:saturate(.95)">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(26,29,43,.15) 0%, rgba(15,23,42,.72) 100%)"></div>
+        <div style="position:relative;z-index:1">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#a7f3d0;text-transform:uppercase">JOIN FOR FREE</div>
+          <h2 style="font-size:28px;font-weight:800;line-height:1.15;margin-top:10px;color:white">Unleash the learner<br/><span style="color:#0ea5e9">inside YOU,</span> Enjoy your<br/>Dream Career</h2>
+          <p style="font-size:13px;color:#cbd5e1;line-height:1.6;margin-top:12px;max-width:300px">Get started with the easiest and most secure way to master AI & code.</p>
+          <div style="display:flex;gap:8px;margin-top:16px">
+            <a href="/catalog.html" style="padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.18);color:white;font-size:12px;font-weight:600;backdrop-filter:blur(6px)">Explore more</a>
+            <a href="/catalog.html" style="padding:10px 16px;border-radius:999px;background:linear-gradient(135deg,#03ef62 0%,#0ac95a 100%);color:#05192d;font-size:12px;font-weight:800;box-shadow:0 4px 16px rgba(3,239,98,.3)">Start Learning</a>
+          </div>
+        </div>
+      </div>
+      <div style="background:transparent;border:none;border-radius:0;padding:8px 4px 8px 0;display:flex;flex-direction:column;justify-content:center">
+        <h3 style="font-size:24px;font-weight:800;line-height:1.1;color:white;letter-spacing:-.02em">Create<br/>new account<span style="color:#03ef62">.</span></h3>
+        <div style="display:grid;gap:10px;margin-top:14px">
+          <div style="position:relative" id="row-username">
+            <label style="position:absolute;top:6px;left:12px;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#a7f3d0;text-transform:uppercase">Username</label>
+            <input autocapitalize="off" autocorrect="off" spellcheck="false" id="auth-name" class="input" placeholder="Tatenda Moyo" value="Tatenda Moyo" style="padding:20px 36px 8px 12px;background:transparent;border:1px solid rgba(255,255,255,.06);color:white;border-radius:14px;margin-bottom:0;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .15s"/;text-transform:none>
+            <i class="bi bi-person" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#6b84ad"></i>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="row-names">
+            <div style="position:relative">
+              <label style="position:absolute;top:6px;left:12px;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#a7f3d0;text-transform:uppercase">First Name</label>
+              <input autocapitalize="off" autocorrect="off" spellcheck="false" id="auth-first" class="input" placeholder="Tatenda" value="Tatenda" style="padding:20px 28px 8px 12px;background:transparent;border:1px solid rgba(255,255,255,.06);color:white;border-radius:14px;margin-bottom:0;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .15s"/;text-transform:none>
+              <i class="bi bi-card-text" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#6b84ad;font-size:12px"></i>
+            </div>
+            <div style="position:relative">
+              <label style="position:absolute;top:6px;left:12px;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#a7f3d0;text-transform:uppercase">Last Name</label>
+              <input autocapitalize="off" autocorrect="off" spellcheck="false" id="auth-last" class="input" placeholder="Moyo" value="Moyo" style="padding:20px 28px 8px 12px;background:transparent;border:1px solid rgba(255,255,255,.06);color:white;border-radius:14px;margin-bottom:0;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .15s"/;text-transform:none>
+              <i class="bi bi-card-text" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#6b84ad;font-size:12px"></i>
+            </div>
+          </div>
+          <div style="position:relative">
+            <label style="position:absolute;top:6px;left:12px;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#a7f3d0;text-transform:uppercase">Email</label>
+            <input autocapitalize="off" autocorrect="off" spellcheck="false" id="auth-email" class="input" placeholder="tatenda@zimlink.academy" value="tatenda@zimlink.academy" style="padding:20px 28px 8px 12px;background:transparent;border:1px solid rgba(255,255,255,.06);color:white;border-radius:14px;margin-bottom:0;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .15s"/;text-transform:none>
+            <i class="bi bi-envelope" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#6b84ad"></i>
+          </div>
+          <div style="position:relative">
+            <label style="position:absolute;top:6px;left:12px;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#03ef62;text-transform:uppercase">Password</label>
+            <input autocapitalize="off" autocorrect="off" spellcheck="false" id="auth-pass" class="input" placeholder="••••••••" type="password" value="••••••••" style="padding:20px 28px 8px 12px;background:transparent;border:1px solid #0ea5e9;color:white;border-radius:14px;margin-bottom:0;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .15s;box-shadow:0 0 0 1px rgba(14,165,233,.18)"/;text-transform:none>
+            <i class="bi bi-eye" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#8aa0c2;cursor:pointer"></i>
+          </div>
+        </div>
+        <div style="text-align:right;margin-top:8px"><a href="#" id="switch-login" style="font-size:11px;color:#8aa0c2">Already a Member? <span style="color:#0ea5e9;font-weight:600">Log In</span></a></div>
+        <button id="auth-submit" class="btn" style="width:100%;margin-top:10px;padding:14px;background:linear-gradient(135deg,#03ef62 0%,#0ac95a 100%);color:#05192d;box-shadow:0 6px 20px rgba(3,239,98,.32);border-radius:999px;font-weight:800;font-size:15px">Create Account</button>
+        <button id="auth-guest" class="btn btn-outline" style="width:100%;margin-top:8px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,.08);color:#8aa0c2">Continue as guest</button>
+        <div id="auth-msg" style="font-size:12px;margin-top:8px;text-align:center;min-height:14px;color:#ff6b6b"></div>
+        <!-- keep hidden legacy name for compat -->
+        <input autocapitalize="off" autocorrect="off" spellcheck="false" id="auth-name-legacy" style="display:none"/;text-transform:none>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script type="module">
+import { fetchJSON, getUser, setUser, getUserId, toast, fmtDate, getTechIcon, cardHTML } from '/js/app.js';
+const continueEl=document.getElementById('continue'), certsEl=document.getElementById('certs'), authModal=document.getElementById('auth-modal'), authName=document.getElementById('auth-name');
+let mode='register';
+function updateAuthTab(){
+  const loginBtn=document.getElementById('tab-login'), regBtn=document.getElementById('tab-register');
+  if(loginBtn){ loginBtn.style.background='var(--dc-green)'; loginBtn.style.color='var(--dc-navy)'; loginBtn.className='btn btn-sm'; }
+  if(regBtn){ regBtn.style.background=''; regBtn.style.color=''; regBtn.className='btn btn-ghost btn-sm'; }
+  if(loginBtn||regBtn){
+    const on = mode==='login'?loginBtn:regBtn, off = mode==='login'?regBtn:loginBtn;
+    if(on){ on.style.background='var(--dc-green)'; on.style.color='var(--dc-navy)'; on.className='btn btn-sm'; }
+    if(off){ off.style.background=''; off.style.color=''; off.className='btn btn-ghost btn-sm'; }
+  }
+  const rowUser=document.getElementById('row-username'), rowNames=document.getElementById('row-names');
+  if(rowUser) rowUser.style.display = mode==='register' ? 'block' : 'none';
+  if(rowNames) rowNames.style.display = mode==='register' ? 'grid' : 'none';
+  authName.style.display = mode==='register' ? 'block' : 'none';
+  // keep legacy hidden input sync
+  const legacy=document.getElementById('auth-name-legacy');
+  if(legacy) legacy.style.display='none';
+}
+const tLogin=document.getElementById('tab-login'), tReg=document.getElementById('tab-register');
+if(tLogin) tLogin.onclick=()=>{mode='login';updateAuthTab();};
+if(tReg) tReg.onclick=()=>{mode='register';updateAuthTab();};
+document.getElementById('switch-login')?.addEventListener('click',(e)=>{e.preventDefault();mode='login';updateAuthTab();});
+updateAuthTab();
+async function checkAuth(){
+  const u=getUser();
+  if(u){
+    authModal.classList.remove('open');
+    document.getElementById('user-name').innerHTML=`<i class="bi bi-person-fill"></i> ${u.name||u.email}`;
+    document.getElementById('hello').textContent=', '+(u.name?.split(' ')[0]||'there')+' 👋';
+  } else {
+    // Only pop when assigned — not on every visit
+    let isAssigned = new URLSearchParams(location.search).has('assigned') || localStorage.getItem('zl_assigned')==='1';
+    try{
+      const prog = await fetchJSON('/api/progress?userId=guest');
+      if(prog.enrolled && prog.enrolled.length>0) isAssigned = true;
+    }catch{}
+    if(isAssigned) authModal.classList.add('open');
+    else authModal.classList.remove('open');
+    document.getElementById('user-name').innerHTML=`<i class="bi bi-person"></i> Guest`;
+    document.getElementById('hello').textContent=' 👋';
+  }
+}
+checkAuth();
+// Allow manual open via user badge / any [data-open-auth]
+document.getElementById('user-name')?.addEventListener('click',()=>authModal.classList.add('open'));
+document.querySelectorAll('[data-open-auth]').forEach(el=>el.addEventListener('click',()=>authModal.classList.add('open')));
+document.getElementById('auth-submit').onclick=async()=>{
+  const email=document.getElementById('auth-email').value.trim(), pass=document.getElementById('auth-pass').value.trim();
+  let name=authName.value.trim();
+  const first=document.getElementById('auth-first')?.value.trim(), last=document.getElementById('auth-last')?.value.trim();
+  if(first||last) name = `${first||''} ${last||''}`.trim() || name;
+  if(!email||!pass) return document.getElementById('auth-msg').textContent='Email and password required';
+  if(mode==='register' && !name) return document.getElementById('auth-msg').textContent='Full name required';
+  document.getElementById('auth-msg').textContent='...';
+  try{
+    const endpoint=mode==='register'?'/api/auth/register':'/api/auth/login', body=mode==='register'?{name,email,password:pass}:{email,password:pass};
+    const r=await fetchJSON(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    setUser(r); document.getElementById('auth-msg').textContent=''; checkAuth(); load(); toast('Welcome');
+  }catch(e){ let msg=''; try{msg=JSON.parse(e.message).error}catch{msg=e.message} document.getElementById('auth-msg').textContent=msg||'Failed'; document.getElementById('auth-msg').style.color='#e7403b'; }
+};
+document.getElementById('auth-guest').onclick=()=>{ setUser({id:'guest',name:'Guest',email:'guest@local'}); localStorage.setItem('zl_userId','guest'); authModal.classList.remove('open'); checkAuth(); load(); };
+document.getElementById('logout').onclick=()=>{ localStorage.removeItem('zl_user'); localStorage.setItem('zl_userId','guest'); checkAuth(); load(); };
+async function load(){
+  const prog=await fetchJSON('/api/progress?userId='+getUserId()), courses=await fetchJSON('/api/courses');
+  document.getElementById('s-streak').textContent=(prog.streak||1)+' day'+(prog.streak>1?'s':''); document.getElementById('s-xp').textContent=(prog.xp||0).toLocaleString(); document.getElementById('s-level').textContent=prog.xp>3000?'Advanced':prog.xp>1000?'Intermediate':'Beginner'; document.getElementById('s-enrolled').textContent=(prog.enrolled||[]).length; document.getElementById('s-certs').textContent=(prog.certificates||[]).length; document.getElementById('lb-xp').textContent=prog.xp||0; document.getElementById('lb-certs').textContent=(prog.certificates||[]).length;
+  const enrolled=courses.filter(c=>(prog.enrolled||[]).includes(c.id));
+  const avg=enrolled.length?Math.round(enrolled.reduce((a,c)=>{const d=(prog.completed[c.id]||[]).length, t=c.chapters.reduce((a,ch)=>a+ch.lessons.length,0); return a+(t?d/t*100:0)},0)/enrolled.length):0;
+  document.getElementById('s-avg').textContent=enrolled.length?avg+'% avg':'—'; document.getElementById('xp-progress').style.width=Math.min(100, (prog.xp||0)/50)+'%';
+   if(!enrolled.length){ document.getElementById('continue-empty').classList.remove('hidden'); continueEl.innerHTML=''; } else { document.getElementById('continue-empty').classList.add('hidden'); continueEl.innerHTML=enrolled.map(c=>{const done=(prog.completed[c.id]||[]).length,total=c.chapters.reduce((a,ch)=>a+ch.lessons.length,0),pct=total?Math.round(done/total*100):0; const icon=getTechIcon(c); return `<a href="/course.html?slug=${c.slug}" class="card" style="overflow:hidden"><div class="card-top" style="background:${c.color}"></div><div class="dc-card-img" style="height:96px;background:linear-gradient(135deg, ${c.color} 0%, #05192d 100%)"><span style="width:56px;height:56px;border-radius:14px;background:var(--dc-surface);display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,.18);position:relative;z-index:1;padding:8px">${icon}</span></div><div class="card-body" style="padding:12px 14px"><div style="display:flex;gap:8px;align-items:center"><b style="font-size:12.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.title}</b><span class="badge badge-neutral" style="font-weight:800">${pct}%</span></div><div class="progress" style="margin-top:8px;height:6px"><i style="width:${pct}%"></i></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--dc-muted);margin-top:6px;font-weight:600"><span>${done}/${total} lessons</span><span>${c.duration}</span></div></div><div class="card-foot" style="padding:10px 14px"><span style="font-size:11px;color:var(--dc-muted);font-weight:700">Continue <i class="bi bi-arrow-right-circle-fill"></i></span><span class="badge" style="background:var(--dc-green);color:var(--dc-navy);border-color:var(--dc-green);font-weight:900;font-size:10px">${c.xp} XP</span></div></a>`;}).join('');}
+    const certs=prog.certificates||[]; if(!certs.length){ document.getElementById('certs-empty').classList.remove('hidden'); certsEl.innerHTML=''; } else { document.getElementById('certs-empty').classList.add('hidden'); certsEl.innerHTML=certs.map(c=>{const course=courses.find(x=>x.id===c.courseId); const icon=course?getTechIcon(course):'🎓'; return `<div class="cert-card" style="border-radius:16px"><div class="cert-badge" style="background:var(--dc-green);color:var(--dc-navy)"><i class="bi bi-patch-check-fill"></i></div><div style="display:flex;gap:10px;align-items:center;margin-bottom:8px"><span style="width:42px;height:42px;border-radius:12px;background:var(--dc-surface);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);padding:6px">${icon}</span><span class="badge badge-green" style="font-weight:800">Verified</span></div><div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--dc-muted);font-weight:800">Certificate</div><div style="font-weight:900;font-size:14px;margin:4px 0;letter-spacing:-.02em">${c.courseTitle}</div><div style="font-size:11px;color:var(--dc-muted);font-weight:600">Issued to <b style="color:var(--dc-text)">${(getUser()?.name||'Learner')}</b> • ${fmtDate(c.issuedAt)}</div><div style="font-size:10px;color:var(--dc-muted2);margin-top:6px;font-family:'JetBrains Mono',monospace">ID: ${c.id}</div><div style="display:flex;gap:8px;margin-top:12px"><a href="${c.verifyUrl}" class="btn btn-sm" style="background:var(--dc-green);color:var(--dc-navy);font-weight:800">View <i class="bi bi-box-arrow-up-right"></i></a><button class="btn btn-outline btn-sm" style="font-weight:700" onclick="navigator.clipboard.writeText(location.origin+'${c.verifyUrl}'); toast('Copied')">Copy</button></div></div>`;}).join('');}
+  const allGrid = document.getElementById('all-courses');
+  if(allGrid) allGrid.innerHTML = courses.map(c=>cardHTML(c)).join('');
+  await renderTranscript(prog);
+}
+let trAttempts = {}, trExams = [];
+function trGrade(pct, exam){
+  const pass = exam?.passMark ?? 75, dist = exam?.distinctionMark ?? 90;
+  if(pct >= dist) return { label:'Distinction', cls:'badge-green' };
+  if(pct >= pass) return { label:'Pass', cls:'badge-blue' };
+  return { label:'Fail', cls:'badge-red' };
+}
+function trBestAttempts(){
+  const out = [];
+  for(const [examId, arr] of Object.entries(trAttempts)){
+    if(!arr || !arr.length) continue;
+    const best = [...arr].sort((a,b)=>b.percent-a.percent)[0];
+    const exam = trExams.find(e=>e.id===examId) || {};
+    out.push({ examId, exam, attempts: arr.length, best });
+  }
+  return out.sort((a,b)=> (b.best.attemptedAt||'').localeCompare(a.best.attemptedAt||''));
+}
+async function renderTranscript(prog){
+  const body = document.getElementById('tr-body');
+  const sumEl = document.getElementById('tr-summary');
+  if(!body) return;
+  try{
+    const [atts, exs] = await Promise.all([
+      fetchJSON('/api/exam-attempts?userId='+getUserId()),
+      fetchJSON('/api/exams')
+    ]);
+    trAttempts = atts || {}; trExams = exs || [];
+  }catch(e){ trAttempts = {}; trExams = []; }
+  const rows = trBestAttempts();
+  const passed = rows.filter(r=>r.best.passed).length;
+  const avg = rows.length ? Math.round(rows.reduce((a,r)=>a+r.best.percent,0)/rows.length) : null;
+  if(sumEl) sumEl.textContent = rows.length ? `${rows.length} exam${rows.length>1?'s':''} • ${passed} passed${avg!==null?' • '+avg+'% avg':''}` : 'No exams yet';
+  if(!rows.length){
+    body.innerHTML = '<div style="padding:18px;text-align:center;border:1px dashed var(--dc-border);border-radius:8px;background:var(--dc-bg)"><b>No exams entered yet</b><p style="color:var(--dc-muted);font-size:13px;margin-top:4px">Sit a qualifying exam and your grades will appear here.</p><a href="/exams.html" class="btn btn-sm" style="margin-top:10px;background:var(--dc-green);color:var(--dc-navy);font-weight:800">Browse exams</a></div>';
+    return;
+  }
+  body.innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <span class="badge badge-neutral">Exams entered: <b>${rows.length}</b></span>
+      <span class="badge badge-green">Passed: <b>${passed}</b></span>
+      <span class="badge badge-blue">Average: <b>${avg}%</b></span>
+      <span class="badge badge-neutral">Certificates: <b>${(prog.certificates||[]).length}</b></span>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="saas-table">
+      <thead><tr><th>Exam</th><th>Date</th><th>Score</th><th>Grade</th><th>Result</th></tr></thead>
+      <tbody>
+        ${rows.map(r=>{
+          const g = trGrade(r.best.percent, r.exam);
+          const date = (r.best.attemptedAt||'').slice(0,10);
+          return `<tr><td><b>${r.exam.code||r.examId}</b><div style="font-size:11px;color:var(--dc-muted)">${r.exam.title||''}</div><div style="font-size:10px;color:var(--dc-muted)">${r.attempts} attempt${r.attempts>1?'s':''}</div></td><td style="white-space:nowrap">${date}</td><td><b>${r.best.percent}%</b> <span style="color:var(--dc-muted)">(${r.best.score}/${r.best.total})</span></td><td><span class="badge ${g.cls}">${g.label}</span></td><td>${r.best.passed?'<span style="color:var(--dc-green);font-weight:800">Qualified</span>':'<span style="color:#e7403b;font-weight:800">Not qualified</span>'}</td></tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    </div>`;
+}
+document.getElementById('tr-download')?.addEventListener('click', downloadTranscript);
+function downloadTranscript(){
+  const u = getUser() || {};
+  const rows = trBestAttempts();
+  const dateStr = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const avg = rows.length ? Math.round(rows.reduce((a,r)=>a+r.best.percent,0)/rows.length) : '—';
+  const passed = rows.filter(r=>r.best.passed).length;
+  const row = (cells, head) => `<tr>${cells.map(c=> head?`<th>${c}</th>`:`<td>${c}</td>`).join('')}</tr>`;
+  const gradeName = (r) => trGrade(r.best.percent, r.exam).label;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>Academic Transcript — ${u.name||'Learner'}</title>
+  <style>
+    body{font-family:Georgia,'Times New Roman',serif;color:#111;margin:0;background:#fff}
+    .sheet{max-width:760px;margin:24px auto;padding:36px 40px;border:1px solid #ddd}
+    .head{text-align:center;border-bottom:3px double #0f172a;padding-bottom:14px}
+    .head h1{font-size:22px;letter-spacing:.24em;margin:6px 0 2px}
+    .head p{font-size:12px;color:#444;margin:2px 0}
+    h2{font-size:15px;letter-spacing:.12em;margin:22px 0 8px;color:#0f172a}
+    table{width:100%;border-collapse:collapse;font-size:12.5px}
+    th,td{border:1px solid #999;padding:7px 9px;text-align:left}
+    th{background:#0f172a;color:#fff;font-size:11px;letter-spacing:.06em}
+    .meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12.5px;margin-top:12px}
+    .sig{display:flex;justify-content:space-between;margin-top:44px;font-size:12px}
+    .sig div{border-top:1px solid #111;padding-top:4px;min-width:200px;text-align:center}
+    .actions{text-align:center;margin:18px 0}
+    .actions button{background:#0f172a;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;cursor:pointer}
+    @page{size:A4 portrait;margin:12mm}
+    @media print{.actions{display:none}.sheet{border:none;margin:0;max-width:100%}}
+  </style></head><body>
+  <div class="actions"><button onclick="window.print()">Print / Save as PDF</button></div>
+  <div class="sheet">
+    <div class="head"><h1>ZIMLINK ACADEMY</h1><p>Official Academic Transcript • RQF / EQF Aligned</p></div>
+    <div class="meta"><span><b>Student:</b> ${u.name||'Learner'} (${u.email||getUserId()})</span><span><b>Issued:</b> ${dateStr}</span></div>
+    <div class="meta"><span><b>Exams entered:</b> ${rows.length}</span><span><b>Passed:</b> ${passed}</span><span><b>Average score:</b> ${avg}${avg==='—'?'':'%'}</span></div>
+    <h2>EXAMINATION RECORD</h2>
+    <table>${row(['Code','Exam','Date','Score','Grade','Result'], true)}${rows.length ? rows.map(r=>row([r.exam.code||r.examId, r.exam.title||'', (r.best.attemptedAt||'').slice(0,10), r.best.percent+'% ('+r.best.score+'/'+r.best.total+')', gradeName(r), r.best.passed?'Qualified':'Not qualified'])).join('') : '<tr><td colspan="6" style="text-align:center">No examinations entered yet.</td></tr>'}</table>
+    <h2>GRADING SCALE</h2>
+    <table>${row(['Grade','Criterion'], true)}${row(['Distinction','90% and above (or exam distinction mark)'])}${row(['Pass','At or above the exam pass mark (typically 75%)'])}${row(['Fail','Below the exam pass mark'])}</table>
+    <div class="sig"><div>Registrar<br/>ZimLink Academy</div><div>Date<br/>${dateStr}</div></div>
+    <p style="font-size:11px;color:#444;margin-top:18px">Verify certificates at ${location.origin}/certificate.html • Generated electronically by ZimLink Academy.</p>
+  </div></body></html>`;
+  const w = window.open('', '_blank');
+  if(!w){ toast('Popup blocked — allow popups to download'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+document.getElementById('logout')?.addEventListener('click',()=>{});
+load();
+</script>
+</body>
+</html>

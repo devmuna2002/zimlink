@@ -1,0 +1,1519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Course — ZimLink Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="/css/style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css"/>
+<style>
+  body {
+    background: #05192d;
+    color: #e2e8f0;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  /* Custom scrollbars for editor and terminal */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #061524;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #193a61;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #25558f;
+  }
+  /* ===== Course Outline Side Panel — persistent on desktop ===== */
+  @media (min-width: 1100px){
+    body.course-has-sidebar .dc-curriculum-drawer{
+      transform: translateX(0) !important;
+      box-shadow: none;
+      border-right: none;
+    }
+    body.course-has-sidebar .dc-drawer-backdrop{ display:none !important; }
+    body.course-has-sidebar #exercise-view,
+    body.course-has-sidebar #video-view,
+    body.course-has-sidebar #quiz-view{
+      margin-left: 380px;
+      width: calc(100% - 380px);
+    }
+    body.course-has-sidebar .dc-player-topbar{ padding-left: 12px; }
+  }
+  /* ===== Course Outline chapter dropdowns ===== */
+  .ch-toggle{ cursor:pointer; border-radius:10px; transition:background .12s; }
+  .ch-toggle:hover{ background:rgba(255,255,255,.045); }
+  .ch-toggle:focus-visible{ outline:2px solid var(--dc-green); outline-offset:2px; }
+  .ch-toggle .chchev{ transition:transform .2s ease; color:#8aa0c2; font-size:13px; }
+  .ch-toggle.open .chchev{ transform:rotate(180deg); color:var(--dc-green); }
+  /* ===== Plain Paper Handwriting Notes — human handwriting, nicely aligned ===== */
+  .ios-notebook{
+    position: relative;
+    background: #ffffff;
+    border: none;
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.10), 0 1px 4px rgba(0,0,0,.06);
+    min-height: 140px;
+    margin: 14px 0;
+    overflow: hidden;
+  }
+  .ios-notebook-holes{ display:none; }
+  .ios-notebook-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #f1f5f9;
+  }
+  .ios-notebook-title{
+    font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:#0f172a; display:flex; align-items:center; gap:6px;
+  }
+  .ios-notebook-title i{ color:#0f172a; }
+  .ios-notebook-meta{ font-size:10.5px; color:#94a3b8; font-weight:600; }
+  .ios-notebook textarea,
+  .ios-notebook .ios-notebook-input{
+    width:100%; min-height:132px; background:transparent; border:none; outline:none; resize:vertical;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size:15px; line-height:1.65; font-weight:400; color:#1e293b; padding:0; caret-color:#0f172a;
+  }
+  .ios-notebook textarea::placeholder{ color:#94a3b8; font-family:'Inter',system-ui,sans-serif; font-size:14.5px; }
+  .ios-notebook .ios-notebook-hint{
+    font-size:11px; color:#94a3b8; margin-top:10px; display:flex; align-items:center; gap:6px;
+    font-family: 'Inter', sans-serif;
+  }
+  .ios-notebook .ios-notebook-save{
+    font-size:11px; font-weight:700; color:#0a3d2e; background:#03ef62; border:none;
+    padding:4px 10px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:4px;
+    font-family: 'Inter', sans-serif;
+  }
+  .ios-notebook{ cursor:pointer; transition:transform .12s, box-shadow .12s; }
+  .ios-notebook:hover{ transform:translateY(-1px); box-shadow:0 6px 22px rgba(0,0,0,.14); }
+  .notes-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .notes-modal.open{display:flex}
+  .notes-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
+  .notes-modal-card{position:relative;z-index:1;max-width:720px;width:90vw;max-height:85vh;overflow:auto;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.4);display:flex;flex-direction:column}
+  .notes-modal-card .ios-notebook{margin:0;box-shadow:none;border-radius:16px;min-height:60vh;flex:1}
+  .notes-modal-card .ios-notebook textarea{ min-height:45vh; font-size:15.5px; line-height:1.65; }
+  .ios-notebook .ios-notebook-save.saved{ background:#f1f5f9; color:#64748b; }
+  /* rendered preset notes — normal readable paragraphs, left aligned */
+  .ios-notebook #ex-notes-list,
+  .ios-notebook #vid-notes-list,
+  .ios-notebook #quiz-notes-text{
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+    font-size:14.5px !important; line-height:1.65 !important; color:#1e293b !important; text-align:left !important;
+  }
+  .ios-notebook #ex-notes-list strong,
+  .ios-notebook #vid-notes-list strong,
+  .ios-notebook #quiz-notes-text strong{ font-family:'Inter',system-ui,sans-serif; font-weight:700; color:#0f172a; }
+  /* Collapsible notes — show a few, expand the rest on demand */
+  .notes-toggle{
+    display:inline-flex; align-items:center; gap:6px; margin:6px 0 4px;
+    padding:8px 14px; border-radius:999px; border:1px solid #0a3d2e;
+    background:#0a3d2e; color:#ffffff; font-family:'Inter',sans-serif;
+    font-size:12px; font-weight:700; cursor:pointer; transition:all .12s;
+  }
+  .notes-toggle:hover{ background:#0f513c; }
+  .notes-rest{ border-top:1px dashed #d9e0e8; margin-top:10px; padding-top:10px; }
+  .notes-summary{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;
+    font-family:'Inter',sans-serif; font-size:11.5px; font-weight:700; color:#0a3d2e; }
+  /* ===== Start Course Gate ===== */
+  .start-gate{
+    position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center;
+    background:radial-gradient(1200px 600px at 20% -10%, rgba(3,239,98,.08), transparent 60%),
+               radial-gradient(900px 500px at 85% 110%, rgba(14,165,233,.10), transparent 55%),
+               #070f1f; padding:24px; overflow:auto;
+  }
+  .start-gate.open{ display:flex; }
+  .start-gate-card{
+    position:relative; width:100%; max-width:560px; background:#0d1b2e; border:1px solid #1a3458;
+    border-radius:20px; padding:34px 34px 30px; box-shadow:0 24px 80px rgba(0,0,0,.45); text-align:center;
+  }
+  .start-gate-close{
+    position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:999px;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); color:#8aa0c2;
+    display:grid; place-items:center; cursor:pointer; transition:background .15s;
+  }
+  .start-gate-close:hover{ background:rgba(255,255,255,.16); color:white; }
+  .start-gate-icon{
+    width:72px; height:72px; margin:0 auto 16px; border-radius:18px; padding:12px;
+    background:var(--dc-surface); border:1px solid #1a3458; display:grid; place-items:center;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+  }
+  .start-gate-icon img{ width:100%; height:100%; object-fit:contain; }
+  .start-gate-tag{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--dc-green);
+  }
+  .start-gate-card h1{ font-size:26px; font-weight:900; color:white; margin-top:6px; letter-spacing:-.02em; }
+  .start-gate-desc{ color:#8aa0c2; font-size:13.5px; line-height:1.55; margin-top:10px; }
+  .start-gate-meta{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:16px 0 4px; }
+  .start-gate-meta span{
+    font-size:11px; font-weight:700; color:#b6c5dd; background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1); padding:6px 12px; border-radius:999px; display:inline-flex; align-items:center; gap:5px;
+  }
+  #start-course-btn{
+    width:100%; margin-top:20px; padding:15px; border:none; cursor:pointer; border-radius:999px;
+    background:linear-gradient(135deg,#03ef62 0%,#0ac95a 100%); color:#05192d;
+    font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 10px 28px rgba(3,239,98,.28); transition:transform .12s, box-shadow .12s;
+  }
+  #start-course-btn:hover{ transform:translateY(-1px); box-shadow:0 14px 34px rgba(3,239,98,.36); }
+  .start-gate-note{ font-size:11.5px; color:#5d6a85; margin-top:14px; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .start-gate-auth{ display:none; margin-top:20px; border-top:1px solid #16294a; padding-top:18px; text-align:left; }
+  .start-gate-auth.open{ display:block; }
+  .start-gate-auth h3{ font-size:14px; color:white; font-weight:800; margin-bottom:12px; }
+  .start-gate-auth .input{
+    width:100%; padding:12px 14px; margin-top:8px; border-radius:12px; background:transparent;
+    border:1px solid rgba(255,255,255,.1); color:white; font-size:13.5px; box-sizing:border-box; outline:none;
+  }
+  .start-gate-auth .input:focus{ border-color:rgba(3,239,98,.5); }
+  .start-gate-auth-note{ font-size:11px; color:#8aa0c2; margin-top:8px; }
+  .start-gate-auth-row{ display:flex; gap:8px; margin-top:12px; }
+  .start-gate-auth-row .btn{ flex:1; justify-content:center; }
+  .start-gate-toggle{ text-align:center; margin-top:10px; font-size:11.5px; color:#8aa0c2; }
+  .start-gate-toggle a{ color:var(--dc-green); font-weight:700; cursor:pointer; }
+  .start-gate-msg{ font-size:12px; margin-top:8px; text-align:center; min-height:14px; color:#ff6b6b; }
+  /* ===== Mobile Course Layout — roomier, no squeezed buttons ===== */
+  @media (max-width:720px){
+    .dc-player-footer{ height:auto; min-height:52px; padding:6px 12px; gap:8px; flex-wrap:wrap; }
+    .dc-player-footer .dc-btn-run,
+    .dc-player-footer .dc-btn-submit{ padding:8px 14px; font-size:12.5px; white-space:nowrap; }
+    .dc-btn-hint{ display:none !important; }
+    #nav-lesson-counter{ font-size:11px; }
+    #btn-nav-prev{ padding:7px 10px; font-size:12px; }
+    .dc-pane-left{ padding:16px 14px; gap:14px; }
+    .dc-video-theater{ padding:0 14px; margin:16px auto 60px; }
+    .dc-workspace{ padding-bottom:0; }
+    .dc-drawer-content .dc-drawer-li{ padding:9px 12px; }
+    .dc-terminal-panel{ height:180px; }
+    .dc-editor-header{ padding:0 8px; gap:6px; }
+    .dc-file-tab{ padding:8px 10px; }
+    .dc-editor-actions{ gap:4px; }
+    .dc-editor-actions .dc-btn-tool{ padding:5px 8px !important; font-size:11px !important; }
+    .dc-curriculum-drawer{ width:min(86vw,340px); }
+    .dc-player-topbar{ padding:0 10px; }
+    .dc-player-meta .dc-meta-dash{ display:none !important; }
+  }
+</style>
+</head>
+<body class="course-has-sidebar">
+
+<!-- Top Navigation Bar (DataCamp Player Topbar) -->
+<header class="dc-player-topbar">
+  <div style="display:flex;align-items:center;gap:12px;min-width:0">
+    <button id="chapter-drawer-toggle" class="dc-chapter-btn" title="Toggle Curriculum Outline">
+      <i class="bi bi-layout-sidebar-inset"></i>
+      <span id="player-chapter-title">Outline</span>
+      <i class="bi bi-chevron-down" style="font-size:10px"></i>
+    </button>
+  </div>
+
+  <!-- Center Exercise Stepper (Discrete dots in topbar) -->
+  <div class="dc-stepper-container" id="exercise-stepper" title="Current chapter exercises">
+    <!-- Rendered dynamically -->
+  </div>
+
+  <!-- Right Meta & Controls -->
+  <div class="dc-player-meta">
+    <a href="/dashboard.html" class="btn btn-sm dc-meta-dash" style="background:rgba(255,255,255,0.08);color:white;border:1px solid #1a395f;padding:5px 10px;font-size:12px">
+      Dashboard
+    </a>
+  </div>
+</header>
+
+<!-- Start Course Gate -->
+<div id="start-gate" class="start-gate">
+  <div class="start-gate-card">
+    <button class="start-gate-close" id="start-gate-close" title="Back to catalog"><i class="bi bi-x-lg"></i></button>
+    <div class="start-gate-icon" id="start-gate-icon"></div>
+    <div class="start-gate-tag"><i class="bi bi-mortarboard-fill"></i> <span id="start-gate-category">—</span></div>
+    <h1 id="start-gate-title">...</h1>
+    <p class="start-gate-desc" id="start-gate-desc">...</p>
+    <div class="start-gate-meta" id="start-gate-meta"></div>
+    <button id="start-course-btn"><i class="bi bi-play-circle-fill"></i> Start Course</button>
+    <p class="start-gate-note"><i class="bi bi-shield-check"></i> Enrolling is free — log in to track progress &amp; earn your verified certificate</p>
+
+    <div class="start-gate-auth" id="start-gate-auth">
+      <h3 id="start-gate-auth-title">Create a free account to enroll</h3>
+      <input id="sg-name" class="input" placeholder="Full name" autocomplete="name">
+      <input id="sg-email" class="input" type="email" placeholder="Email address" autocomplete="email">
+      <input id="sg-pass" class="input" type="password" placeholder="Password" autocomplete="current-password">
+      <div class="start-gate-row start-gate-auth-row">
+        <button id="sg-submit" class="btn" style="background:var(--dc-green);color:#05192d"><i class="bi bi-person-check-fill"></i> <span id="sg-submit-label">Create Account</span></button>
+        <button id="sg-guest" class="btn btn-outline" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:#8aa0c2">Guest</button>
+      </div>
+      <div id="start-gate-msg" class="start-gate-msg"></div>
+      <div class="start-gate-toggle">
+        Already have an account? <a id="sg-switch">Log in instead</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide-out Curriculum Drawer -->
+<div id="drawer-backdrop" class="dc-drawer-backdrop"></div>
+<aside id="curriculum-drawer" class="dc-curriculum-drawer">
+  <div class="dc-drawer-header">
+    <div>
+      <span style="font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dc-green)">COURSE OUTLINE</span>
+      <h3 id="drawer-course-title" style="font-size:14px;color:white;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px">Loading...</h3>
+    </div>
+    <button id="drawer-close" class="dc-drawer-close"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div style="padding:12px 16px;background:#051424;border-bottom:1px solid #142f4c;display:flex;justify-content:space-between;align-items:center;font-size:11.5px">
+    <span id="drawer-progress-text" style="color:#8aa0c2">0% complete</span>
+    <span id="drawer-xp-text" style="color:var(--dc-green);font-weight:700">0 XP</span>
+  </div>
+  <div class="dc-drawer-content" id="drawer-chapters">
+    <!-- Rendered dynamically -->
+  </div>
+</aside>
+
+<!-- ==========================================================================
+     MODE 1: Coding Exercise View (2-Pane Layout)
+     ========================================================================== -->
+<div id="exercise-view" class="dc-workspace" style="display:none">
+  <!-- Left Pane: Context, Narrative & Instructions -->
+  <section class="dc-pane-left">
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <img id="ex-lesson-logo" src="" alt="Tech Logo" style="width:38px;height:38px;border-radius:8px;padding:6px;background:#09203a;border:1px solid #16365c;object-fit:contain;flex-shrink:0;display:none"/>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="dc-exercise-badge"><i class="bi bi-code-slash"></i> EXERCISE</span>
+        </div>
+        <h1 class="dc-exercise-title" id="ex-title" style="margin-top:4px">Loading exercise...</h1>
+      </div>
+    </div>
+
+    <!-- Narrative & Conceptual Background -->
+    <div class="dc-narrative" id="ex-narrative">
+      <!-- Injected dynamically -->
+    </div>
+
+    <!-- Instructions Checklist Box -->
+    <div class="dc-instructions-card">
+      <div class="dc-instructions-head">
+        <span class="dc-instructions-title"><i class="bi bi-list-check" style="color:var(--dc-green);font-size:15px"></i> INSTRUCTIONS</span>
+        <span class="dc-instructions-xp" id="ex-xp">+100 XP</span>
+      </div>
+      <div class="dc-instructions-text" id="ex-instructions">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Lecture Notes — iOS Notebook Editable -->
+    <div id="ex-notes-card" class="ios-notebook">
+      <div class="ios-notebook-holes"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="ios-notebook-head">
+        <span class="ios-notebook-title"><i class="bi bi-journal-bookmark-fill"></i> Lecture Notes &amp; Formulas</span>
+        <span class="ios-notebook-meta">UZ • Editable</span>
+      </div>
+      <div id="ex-notes-list" style="font-size:13px;line-height:28px;color:#334155;margin-bottom:12px"></div>
+      <textarea id="ex-personal-notes" class="ios-notebook-input" rows="3" placeholder="Tap to add your own notes — auto-saved for this lesson..."></textarea>
+      <div class="ios-notebook-hint"><i class="bi bi-cloud-check" style="color:#0a3d2e"></i> <span id="ex-notes-status">Auto-saved on this device</span> <button class="ios-notebook-save" id="ex-notes-save"><i class="bi bi-check2"></i> Saved</button></div>
+    </div>
+
+    <!-- In-place Expandable Hint Accordion -->
+    <div class="dc-hint-accordion" id="hint-accordion">
+      <button class="dc-hint-toggle" id="hint-toggle">
+        <span style="display:flex;align-items:center;gap:8px">
+          <i class="bi bi-lightbulb-fill" style="color:var(--dc-yellow)"></i>
+          <span>Need a hint? <span style="font-size:11px;color:#8aa0c2;font-weight:400">(-30 XP)</span></span>
+        </span>
+        <i class="bi bi-chevron-down" id="hint-chevron"></i>
+      </button>
+      <div class="dc-hint-body" id="hint-body">
+        <p id="hint-text" style="margin:0 0 10px 0"></p>
+        <button id="show-solution-btn" class="dc-btn-tool" style="font-size:11.5px"><i class="bi bi-eye"></i> Show Solution</button>
+        <pre id="solution-box" style="display:none;background:#030d17;border:1px solid #16365c;border-radius:6px;padding:10px;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#38bdf8;white-space:pre-wrap"></pre>
+      </div>
+    </div>
+
+    <!-- Reflect / Revision Check -->
+    <div id="ex-reflection" style="background:#071c32;border:1px solid #14355a;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#94a3b8;margin-top:12px">
+      <b style="color:white;display:flex;align-items:center;gap:6px;margin-bottom:4px"><i class="bi bi-question-circle" style="color:var(--dc-green)"></i> Concept Check:</b>
+      <span id="ex-reflection-text"></span>
+    </div>
+
+    <!-- Revision Box -->
+    <div id="ex-revision-box" style="margin-top:12px;padding:12px 14px;background:#051424;border:1px solid #14355a;border-radius:8px;font-size:12px;color:#94a3b8">
+      <b style="color:white;display:flex;align-items:center;gap:6px;margin-bottom:4px"><i class="bi bi-mortarboard-fill" style="color:var(--dc-yellow)"></i> Faculty Revision Note:</b>
+      <div id="ex-revision-text" style="line-height:1.5"></div>
+    </div>
+  </section>
+
+  <!-- Right Pane: Monaco Code Editor + Terminal Console -->
+  <section class="dc-pane-right">
+    <div class="dc-editor-header">
+      <div class="dc-file-tab">
+        <img id="editor-lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Tech" style="width:16px;height:16px;object-fit:contain"/>
+        <span id="editor-file-name">script.py</span>
+      </div>
+      <div class="dc-editor-actions">
+        <button id="btn-lang-python" class="dc-btn-tool active" style="color:var(--dc-green);border-color:rgba(3,239,98,0.3)">Python</button>
+        <button id="btn-lang-js" class="dc-btn-tool">JavaScript</button>
+        <button id="btn-reset-code" class="dc-btn-tool" title="Reset starter code"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+      </div>
+    </div>
+
+    <!-- Monaco Container -->
+    <div id="monaco" class="dc-monaco-wrapper"></div>
+
+    <!-- IPython Shell / Console Panel -->
+    <div class="dc-terminal-panel">
+      <div class="dc-terminal-header">
+        <span class="dc-terminal-title"><i class="bi bi-terminal"></i> IPython Shell / Output</span>
+        <button id="btn-clear-console" class="dc-btn-tool" style="padding:2px 8px;font-size:11px">Clear</button>
+      </div>
+      <div id="console" class="dc-terminal-output">
+        <span style="color:#64748b">Press <b>Run Code</b> to execute, or <b>Submit Answer</b> when ready.</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==========================================================================
+     MODE 2: Video & Conceptual Lesson View (Theater Layout)
+     ========================================================================== -->
+<div id="video-view" class="dc-video-theater" style="display:none">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+    <img id="vid-lesson-logo" src="" alt="Lesson Tech" style="width:44px;height:44px;border-radius:10px;padding:6px;background:#09203a;border:1px solid #16365c;object-fit:contain;flex-shrink:0;display:none"/>
+    <div>
+      <h2 id="vid-title" style="font-size:22px;font-weight:900;color:white;margin:0"></h2>
+      <div id="vid-meta" style="font-size:12px;color:#8aa0c2;margin-top:4px"></div>
+    </div>
+  </div>
+
+  <div class="dc-video-frame-wrap">
+    <iframe id="vid-iframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+
+  <!-- Related video quick pills -->
+  <div id="vid-related-row" style="display:flex;gap:10px;margin-top:14px;overflow-x:auto;padding-bottom:6px">
+    <!-- Injected dynamically -->
+  </div>
+
+  <!-- Video Notes & Key Concepts -->
+  <div class="card" style="margin-top:20px;padding:24px;background:#091d35;border:1px solid #16365c">
+    <h3 style="font-size:16px;font-weight:800;color:white;display:flex;align-items:center;justify-content:space-between">
+      <span style="display:flex;align-items:center;gap:8px">
+        <i class="bi bi-journal-text" style="color:var(--dc-green)"></i> Lesson Takeaways &amp; Core Concepts
+      </span>
+      <span style="font-size:11px;color:#8aa0c2;font-weight:500">University of Zimbabwe Syllabus</span>
+    </h3>
+    <div id="vid-notes" style="font-size:14px;color:#cbd5e1;line-height:1.7;margin-top:12px"></div>
+
+    <!-- Structured Bullet Notes — iOS Notebook Editable -->
+    <div id="vid-notes-list-card" class="ios-notebook" style="margin-top:14px">
+      <div class="ios-notebook-holes"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="ios-notebook-head">
+        <span class="ios-notebook-title"><i class="bi bi-journal-text"></i> Lesson Takeaways</span>
+        <span class="ios-notebook-meta">Editable</span>
+      </div>
+      <div id="vid-notes-list" style="font-size:13px;line-height:28px;color:#334155;margin-bottom:12px"></div>
+      <textarea id="vid-personal-notes" class="ios-notebook-input" rows="3" placeholder="Add your personal takeaways..."></textarea>
+      <div class="ios-notebook-hint"><i class="bi bi-cloud-check" style="color:#0a3d2e"></i> <span id="vid-notes-status">Auto-saved</span> <button class="ios-notebook-save" id="vid-notes-save"><i class="bi bi-check2"></i> Saved</button></div>
+    </div>
+
+    <div id="vid-revision-box" style="margin-top:16px;padding:14px;background:#051424;border:1px solid #14355a;border-radius:8px;font-size:13px;color:#94a3b8">
+      <b style="color:white;display:flex;align-items:center;gap:6px;margin-bottom:6px"><i class="bi bi-arrow-repeat" style="color:var(--dc-green)"></i> Revision Note:</b>
+      <div id="vid-revision-text" style="line-height:1.6"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODE 3: Quiz Assessment View
+     ========================================================================== -->
+<div id="quiz-view" class="dc-video-theater" style="display:none">
+  <div style="padding:28px;background:transparent;border:none;border-radius:12px">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+      <img id="quiz-lesson-logo" src="" alt="Lesson Tech" style="width:48px;height:48px;border-radius:10px;padding:7px;background:#0f2a4a;border:none;object-fit:contain;flex-shrink:0;display:none"/>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="dc-exercise-badge" style="color:var(--dc-yellow);font-size:12px"><i class="bi bi-patch-question-fill" style="font-size:14px"></i> KNOWLEDGE CHECK</span>
+          <span class="badge" style="background:rgba(14,165,233,0.08);color:#38bdf8;border:none;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px"><i class="bi bi-mortarboard-fill"></i> UZ Assessment</span>
+          <span class="dc-instructions-xp" id="quiz-xp-badge" style="margin-left:auto">+50 XP</span>
+        </div>
+        <h2 id="quiz-title" style="font-size:22px;font-weight:900;color:white;margin-top:8px;margin-bottom:0;letter-spacing:-.02em"></h2>
+      </div>
+    </div>
+    <div id="quiz-question" style="font-size:17px;color:#e2e8f0;line-height:1.6;margin-bottom:24px;font-weight:500"></div>
+
+    <div id="quiz-options-container" style="display:grid;gap:12px;margin-bottom:24px">
+      <!-- Options injected dynamically -->
+    </div>
+
+    <!-- Quiz Notes — iOS Notebook Editable -->
+    <div id="quiz-notes-box" class="ios-notebook" style="display:none;margin-bottom:20px">
+      <div class="ios-notebook-holes"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="ios-notebook-head">
+        <span class="ios-notebook-title"><i class="bi bi-lightbulb-fill" style="color:#f59e0b"></i> Key Takeaway</span>
+        <span class="ios-notebook-meta">Editable</span>
+      </div>
+      <div id="quiz-notes-text" style="font-size:13px;line-height:28px;color:#334155;margin-bottom:12px"></div>
+      <textarea id="quiz-personal-notes" class="ios-notebook-input" rows="3" placeholder="Write your own answer reasoning..."></textarea>
+      <div class="ios-notebook-hint"><i class="bi bi-cloud-check" style="color:#0a3d2e"></i> <span id="quiz-notes-status">Auto-saved</span> <button class="ios-notebook-save" id="quiz-notes-save"><i class="bi bi-check2"></i> Saved</button></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px">
+      <button id="btn-quiz-submit" class="dc-btn-submit">
+        Submit Answer <i class="bi bi-arrow-right"></i>
+      </button>
+      <div id="quiz-feedback" style="font-size:13.5px;font-weight:700"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Sticky Player Action Bar -->
+<footer class="dc-player-footer">
+  <div style="display:flex;align-items:center;gap:10px">
+    <button id="btn-nav-prev" class="btn btn-outline btn-sm" style="background:#091c33;color:white;border-color:#1c3f68">
+      <i class="bi bi-chevron-left"></i> Previous
+    </button>
+    <span id="nav-lesson-counter" style="font-size:12px;color:#8aa0c2;font-weight:700">Lesson 1 of 1</span>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:10px" id="footer-actions">
+    <!-- Rendered according to mode -->
+    <button id="btn-player-run" class="dc-btn-run">
+      <i class="bi bi-play-fill"></i> Run Code
+    </button>
+    <button id="btn-player-submit" class="dc-btn-submit">
+      <i class="bi bi-check2-circle"></i> Submit Answer <span class="dc-btn-hint" style="font-size:11px;opacity:0.8;font-weight:600">(Ctrl+Enter)</span>
+    </button>
+  </div>
+</footer>
+
+<!-- Toast Notifications -->
+<div class="toast" id="toast"></div>
+
+<!-- Notes Pop Modal — bigger editable -->
+<div id="notes-modal" class="notes-modal">
+  <div class="notes-modal-backdrop" id="notes-modal-backdrop"></div>
+  <div class="notes-modal-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #f1f5f9;background:#fff;position:sticky;top:0;z-index:2;border-radius:16px 16px 0 0">
+      <span style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#0f172a;display:flex;align-items:center;gap:8px"><i class="bi bi-journal-text"></i> Notes — Plain Paper</span>
+      <button id="notes-modal-close" style="width:32px;height:32px;border-radius:999px;background:#f1f5f9;border:1px solid #e2e8f0;color:#0f172a;display:grid;place-items:center;cursor:pointer"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div id="notes-modal-content" style="flex:1;overflow:auto;padding:0"></div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+<script type="module">
+import { fetchJSON, getUser, setUser, getUserId, toast, getTechIcon, freecodecampVideos } from '/js/app.js';
+
+const slug = new URLSearchParams(location.search).get('slug') || 'ai-foundations';
+let course = null;
+let flatLessons = [];
+let currentIndex = 0;
+let editor = null;
+let currentLang = 'python';
+let completed = new Set();
+let monacoReady = false;
+
+// ===== iOS Notebook Editable Notes — per-lesson localStorage =====
+function notesKey(lessonId){ return `zl_notes_${course?.id||slug}_${lessonId}`; }
+function loadNotesInto(lessonId, ta, statusEl){
+  if(!ta) return;
+  try{
+    const saved = localStorage.getItem(notesKey(lessonId));
+    if(saved!==null) ta.value = saved;
+    else ta.value = '';
+    if(statusEl) statusEl.textContent = saved ? 'Restored' : 'Auto-saved on this device';
+    // auto-resize to content
+    ta.style.height = 'auto';
+    ta.style.height = Math.max(112, ta.scrollHeight) + 'px';
+  }catch{}
+}
+function bindNotes(ta, lessonId, statusEl, saveBtn){
+  if(!ta) return;
+  let t=null;
+  const save = ()=>{
+    try{ localStorage.setItem(notesKey(lessonId), ta.value); }catch{}
+    if(statusEl) statusEl.textContent = 'Saved • ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    if(saveBtn){ saveBtn.textContent = '✓ Saved'; saveBtn.classList.add('saved'); setTimeout(()=>{ saveBtn.innerHTML='<i class="bi bi-check2"></i> Saved'; saveBtn.classList.remove('saved'); }, 1400); }
+    // resize
+    ta.style.height = 'auto';
+    ta.style.height = Math.max(112, ta.scrollHeight) + 'px';
+  };
+  ta.addEventListener('input', ()=>{
+    if(statusEl) statusEl.textContent = 'Typing…';
+    clearTimeout(t); t=setTimeout(save, 700);
+    ta.style.height = 'auto';
+    ta.style.height = Math.max(112, ta.scrollHeight) + 'px';
+  });
+  if(saveBtn) saveBtn.addEventListener('click', (e)=>{ e.preventDefault(); save(); });
+}
+// ===== Notes Pop Modal — bigger editable on click =====
+let lastNotesSource = null;
+const notesModal = document.getElementById('notes-modal');
+const notesModalContent = document.getElementById('notes-modal-content');
+const notesModalBackdrop = document.getElementById('notes-modal-backdrop');
+const notesModalClose = document.getElementById('notes-modal-close');
+function openNotesModal(sourceEl){
+  if(!sourceEl || !flatLessons[currentIndex]) return;
+  lastNotesSource = sourceEl;
+  const lessonId = flatLessons[currentIndex].id;
+  const title = flatLessons[currentIndex].title || course?.title || 'Notes';
+  const preset = sourceEl.querySelector('[id$="-notes-list"], [id$="-notes-text"]');
+  const ta = sourceEl.querySelector('textarea');
+  const presetHTML = preset ? preset.innerHTML : '';
+  const taValue = ta ? ta.value : (localStorage.getItem(notesKey(lessonId)) || '');
+  notesModalContent.innerHTML = `
+    <div class="ios-notebook" style="margin:0;box-shadow:none;border-radius:16px;min-height:60vh">
+      <div class="ios-notebook-head">
+        <span class="ios-notebook-title"><i class="bi bi-journal-text"></i> ${title}</span>
+        <span class="ios-notebook-meta">Plain paper • bigger • editable</span>
+      </div>
+      <div style="max-height:30vh;overflow:auto;padding-right:4px;margin-bottom:14px;border-bottom:1px solid #f1f5f9;padding-bottom:12px">${presetHTML}</div>
+      <textarea id="modal-notes-ta" class="ios-notebook-input" style="min-height:36vh;font-size:20px;line-height:34px" placeholder="Continue writing your notes...">${taValue.replace(/</g,'&lt;')}</textarea>
+      <div class="ios-notebook-hint" style="margin-top:12px"><i class="bi bi-cloud-check" style="color:#0a3d2e"></i> <span id="modal-notes-status">Auto-saved on this device</span> <button class="ios-notebook-save" id="modal-notes-save"><i class="bi bi-check2"></i> Saved</button></div>
+    </div>
+  `;
+  const modalTa = document.getElementById('modal-notes-ta');
+  const modalStatus = document.getElementById('modal-notes-status');
+  const modalSave = document.getElementById('modal-notes-save');
+  if(modalTa){
+    // load existing (ensures height)
+    modalTa.value = taValue;
+    modalTa.style.height='auto'; modalTa.style.height=Math.max(220, modalTa.scrollHeight)+'px';
+    bindNotes(modalTa, lessonId, modalStatus, modalSave);
+    // keep source in sync while typing in modal
+    modalTa.addEventListener('input', ()=>{
+      const origTa = lastNotesSource?.querySelector('textarea');
+      if(origTa){ origTa.value = modalTa.value; origTa.dispatchEvent(new Event('input', {bubbles:true})); }
+    });
+  }
+  notesModal.classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=> modalTa?.focus(), 80);
+}
+function closeNotesModal(){
+  const modalTa = document.getElementById('modal-notes-ta');
+  if(modalTa && lastNotesSource){
+    const origTa = lastNotesSource.querySelector('textarea');
+    if(origTa){ origTa.value = modalTa.value; origTa.dispatchEvent(new Event('input', {bubbles:true})); }
+  }
+  notesModal.classList.remove('open');
+  document.body.style.overflow='';
+}
+notesModalBackdrop?.addEventListener('click', closeNotesModal);
+notesModalClose?.addEventListener('click', closeNotesModal);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && notesModal?.classList.contains('open')) closeNotesModal(); });
+document.addEventListener('click', (e)=>{
+  const nb = e.target.closest('.ios-notebook');
+  if(!nb) return;
+  if(nb.closest('#notes-modal')) return;
+  if(e.target.closest('button')) return;
+  // any click on the plain-paper notebook pops bigger editable
+  openNotesModal(nb);
+});
+
+// Elements
+const chapterToggleBtn = document.getElementById('chapter-drawer-toggle');
+const drawerCloseBtn = document.getElementById('drawer-close');
+const curriculumDrawer = document.getElementById('curriculum-drawer');
+const drawerBackdrop = document.getElementById('drawer-backdrop');
+const stepperContainer = document.getElementById('exercise-stepper');
+const playerChapterTitle = document.getElementById('player-chapter-title');
+const xpBadge = document.getElementById('xp-badge') || { set innerHTML(v){} };
+
+// Mode containers
+const exerciseView = document.getElementById('exercise-view');
+const videoView = document.getElementById('video-view');
+const quizView = document.getElementById('quiz-view');
+const footerActions = document.getElementById('footer-actions');
+const btnNavPrev = document.getElementById('btn-nav-prev');
+const navLessonCounter = document.getElementById('nav-lesson-counter');
+const btnPlayerRun = document.getElementById('btn-player-run');
+const btnPlayerSubmit = document.getElementById('btn-player-submit');
+const consoleOutput = document.getElementById('console');
+
+// --- Start Course Gate ---
+const startGate = document.getElementById('start-gate');
+const gateAuth = document.getElementById('start-gate-auth');
+const sgName = document.getElementById('sg-name');
+const sgEmail = document.getElementById('sg-email');
+const sgPass = document.getElementById('sg-pass');
+const sgMsg = document.getElementById('start-gate-msg');
+let gateMode = 'register';
+let enrolled = false;
+
+// Toggle Drawer
+function toggleDrawer(open) {
+  const shouldOpen = open !== undefined ? open : !curriculumDrawer.classList.contains('open');
+  curriculumDrawer.classList.toggle('open', shouldOpen);
+  drawerBackdrop.classList.toggle('open', shouldOpen);
+}
+chapterToggleBtn.addEventListener('click', () => toggleDrawer());
+drawerCloseBtn.addEventListener('click', () => toggleDrawer(false));
+drawerBackdrop.addEventListener('click', () => toggleDrawer(false));
+
+// Init Course
+async function init() {
+  try {
+    course = await fetchJSON('/api/courses/' + slug);
+  } catch (err) {
+    document.body.innerHTML = `
+      <div style="padding:40px;text-align:center;color:white">
+        <h2>Course not found</h2>
+        <p style="color:#8aa0c2">We couldn't load course: "${slug}".</p>
+        <a href="/catalog.html" class="btn" style="background:var(--dc-green);color:var(--dc-navy);margin-top:14px">Browse Catalog</a>
+      </div>`;
+    return;
+  }
+
+  document.title = `${course.title} — ZimLink Academy`;
+  document.getElementById('drawer-course-title').textContent = course.title;
+
+  // Flatten lessons
+  flatLessons = [];
+  course.chapters.forEach(ch => {
+    ch.lessons.forEach(l => {
+      flatLessons.push({
+        ...l,
+        chapterId: ch.id,
+        chapterTitle: ch.title
+      });
+    });
+  });
+
+  // Load progress
+  let prog = null;
+  try {
+    prog = await fetchJSON('/api/progress?userId=' + getUserId());
+    if (prog.completed && prog.completed[course.id]) {
+      completed = new Set(prog.completed[course.id]);
+    }
+    xpBadge.innerHTML = `<i class="bi bi-lightning-charge-fill"></i> ${(prog.xp || 0).toLocaleString()} XP`;
+  } catch (e) {
+    console.warn('Progress fetch error', e);
+  }
+
+  // Enroll-first gate: everyone must be enrolled before starting
+  enrolled = (prog && prog.enrolled || []).includes(course.id) || (prog && prog.completed && prog.completed[course.id] && prog.completed[course.id].length > 0);
+  if (!enrolled) {
+    showStartGate();
+    return;
+  }
+
+  enterCourse();
+}
+
+function showStartGate() {
+  const total = course.chapters.reduce((a, ch) => a + ch.lessons.length, 0);
+  document.getElementById('start-gate-icon').innerHTML = getTechIcon(course);
+  document.getElementById('start-gate-category').textContent = course.category || 'Course';
+  document.getElementById('start-gate-title').textContent = course.title;
+  document.getElementById('start-gate-desc').textContent = course.short || course.description || '';
+  document.getElementById('start-gate-meta').innerHTML = [
+    `<span><i class="bi bi-lightning-charge-fill"></i> ${(course.xp || 0).toLocaleString()} XP</span>`,
+    `<span><i class="bi bi-clock"></i> ${course.duration || 'Self-paced'}</span>`,
+    `<span><i class="bi bi-signal"></i> ${course.level || 'All levels'}</span>`,
+    `<span><i class="bi bi-list-check"></i> ${total} lessons</span>`,
+    `<span><i class="bi bi-patch-check-fill"></i> Certificate included</span>`
+  ].join('');
+  startGate.classList.add('open');
+}
+
+function updateGateAuthUI() {
+  const reg = gateMode === 'register';
+  document.getElementById('start-gate-auth-title').textContent = reg ? 'Create a free account to enroll' : 'Log in to enroll';
+  sgName.style.display = reg ? 'block' : 'none';
+  document.getElementById('sg-submit-label').textContent = reg ? 'Create Account' : 'Log In';
+  document.getElementById('sg-switch').textContent = reg ? 'Log in instead' : 'Create an account instead';
+}
+
+function enterCourse() {
+  setupMonaco();
+  renderDrawerChapters();
+  goToLesson(0);
+  // Keep outline side panel visible on desktop whilst on course
+  if (window.innerWidth >= 1100) {
+    setTimeout(() => toggleDrawer(true), 80);
+  }
+}
+
+async function enrollAndStart(uid) {
+  const btn = document.getElementById('start-course-btn');
+  const prev = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Enrolling...';
+  try {
+    await fetchJSON('/api/enroll', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: uid, courseId: course.id }) });
+  } catch (e) { /* non-fatal */ }
+  try {
+    fetchJSON('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: uid, courseId: course.id, action: 'course_enroll' }) }).catch(() => {});
+  } catch (e) {}
+  startGate.classList.remove('open');
+  enterCourse();
+  toast('Enrolled! Let\'s start ' + course.title);
+}
+
+// Gate controls
+document.getElementById('start-course-btn').addEventListener('click', () => {
+  const u = getUser();
+  if (u && u.id && u.id !== 'guest') {
+    enrollAndStart(u.id);
+  } else {
+    gateMode = 'register'; updateGateAuthUI();
+    gateAuth.classList.add('open');
+    sgName.focus();
+  }
+});
+document.getElementById('start-gate-close').addEventListener('click', () => { location.href = '/catalog.html'; });
+document.getElementById('sg-switch').addEventListener('click', () => { gateMode = gateMode === 'register' ? 'login' : 'register'; updateGateAuthUI(); });
+document.getElementById('sg-submit').addEventListener('click', async () => {
+  const name = sgName.value.trim();
+  const email = sgEmail.value.trim();
+  const pass = sgPass.value;
+  if (!email || !pass) { sgMsg.textContent = 'Email and password required'; return; }
+  if (gateMode === 'register' && !name) { sgMsg.textContent = 'Full name required'; return; }
+  sgMsg.textContent = '...'; sgMsg.style.color = '#ff6b6b';
+  try {
+    const endpoint = gateMode === 'register' ? '/api/auth/register' : '/api/auth/login';
+    const body = gateMode === 'register' ? { name, email, password: pass } : { email, password: pass };
+    const r = await fetchJSON(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    setUser(r);
+    sgMsg.textContent = '';
+    gateAuth.classList.remove('open');
+    await enrollAndStart(r.id);
+  } catch (e) {
+    let m = 'Failed'; try { m = JSON.parse(e.message).error; } catch {}
+    sgMsg.textContent = m || 'Failed';
+  }
+});
+document.getElementById('sg-guest').addEventListener('click', async () => {
+  setUser({ id: 'guest', name: 'Guest', email: 'guest@local' });
+  localStorage.setItem('zl_userId', 'guest');
+  gateAuth.classList.remove('open');
+  await enrollAndStart('guest');
+});
+document.getElementById('sg-pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('sg-submit').click(); });
+
+// Render Slide-Out Drawer Chapters — chapters collapse into dropdowns;
+// the active chapter always opens, manual opens persist across re-renders.
+const openChapters = new Set();
+function renderDrawerChapters() {
+  const drawerChapters = document.getElementById('drawer-chapters');
+  const activeId = flatLessons[currentIndex]?.id;
+  course.chapters.forEach((ch, i) => {
+    if (ch.lessons.some(l => l.id === activeId)) openChapters.add(i);
+  });
+  drawerChapters.innerHTML = course.chapters.map((ch, chIdx) => {
+    const totalInChapter = ch.lessons.length;
+    const completedInChapter = ch.lessons.filter(l => completed.has(l.id)).length;
+    const pct = totalInChapter ? Math.round((completedInChapter / totalInChapter) * 100) : 0;
+    const isOpen = openChapters.has(chIdx);
+
+    return `
+      <div data-ch-block="${chIdx}" style="margin-bottom:20px">
+        <div class="ch-toggle${isOpen ? ' open' : ''}" data-ch="${chIdx}" role="button" tabindex="0" title="Expand/collapse chapter" style="padding:10px 4px 8px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <span style="font-size:10.5px;color:var(--dc-green);font-weight:800;letter-spacing:.08em">CHAPTER ${chIdx + 1}</span>
+            <div style="font-size:15px;font-weight:800;color:white;margin-top:2px;letter-spacing:-.01em">${ch.title}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <span style="font-size:12px;color:#8aa0c2;font-weight:700">${completedInChapter}/${totalInChapter}</span>
+            <i class="bi bi-chevron-down chchev"></i>
+          </div>
+        </div>
+        <div style="height:3px;background:rgba(255,255,255,0.08);border-radius:999px;margin:0 4px 10px;overflow:hidden">
+          <div style="height:100%;background:var(--dc-green);width:${pct}%;border-radius:999px"></div>
+        </div>
+        <div data-ch-lessons="${chIdx}" style="display:${isOpen ? 'grid' : 'none'};gap:6px">
+          ${ch.lessons.map(l => {
+            const isDone = completed.has(l.id);
+            const isActive = flatLessons[currentIndex]?.id === l.id;
+            const icon = l.type === 'video' ? '<i class="bi bi-play-fill"></i>' : (l.type === 'quiz' ? '?' : (l.type === 'exam' ? '<i class="bi bi-file-earmark-check-fill"></i>' : '&lt;/&gt;'));
+            const hasLogo = !!l.logo;
+            return `
+              <div class="drawer-lesson-item" data-id="${l.id}" style="padding:10px 8px;display:flex;align-items:center;gap:12px;cursor:pointer;background:${isActive ? 'rgba(3,239,98,0.10)' : 'transparent'};border-radius:10px;transition:background .12s">
+                <span style="width:32px;height:32px;border-radius:9px;background:${isDone ? 'var(--dc-green)' : (isActive ? '#0a3d2e' : '#0f2a4a')};border:none;color:${isDone ? '#05192d' : (isActive ? 'var(--dc-green)' : '#8aa0c2')};display:grid;place-items:center;font-size:14px;font-weight:800;flex-shrink:0">
+                  ${isDone ? '✓' : icon}
+                </span>
+                ${hasLogo ? `<img src="${l.logo}" style="width:26px;height:26px;object-fit:contain;border-radius:7px;background:rgba(255,255,255,0.06);padding:4px;border:none;flex-shrink:0" alt=""/>` : ''}
+                <span style="font-size:14.5px;color:${isActive ? '#ffffff' : (isDone ? '#94a3b8' : '#cbd5e1')};flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:${isActive ? '700' : '500'}">${l.title}</span>
+                <span style="font-size:11.5px;color:#64748b;font-weight:600">${l.duration || '5m'}</span>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
+  drawerChapters.querySelectorAll('.ch-toggle').forEach(el => {
+    const toggle = () => {
+      const i = +el.dataset.ch;
+      const block = el.closest('[data-ch-block]');
+      const list = block ? block.querySelector('[data-ch-lessons]') : null;
+      if (openChapters.has(i)) {
+        openChapters.delete(i);
+        if (list) list.style.display = 'none';
+        el.classList.remove('open');
+      } else {
+        openChapters.add(i);
+        if (list) list.style.display = 'grid';
+        el.classList.add('open');
+      }
+    };
+    el.addEventListener('click', toggle);
+    el.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(); }
+    });
+  });
+
+  drawerChapters.querySelectorAll('.drawer-lesson-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const targetId = el.dataset.id;
+      const targetIdx = flatLessons.findIndex(x => x.id === targetId);
+      if (targetIdx >= 0) {
+        goToLesson(targetIdx);
+        toggleDrawer(false);
+      }
+    });
+  });
+
+  // Update Drawer Top Summary
+  const total = flatLessons.length;
+  const done = completed.size;
+  const totalPct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('drawer-progress-text').textContent = `${totalPct}% completed • ${done}/${total} exercises`;
+  const earnedXp = [...completed].reduce((acc, id) => {
+    const found = flatLessons.find(x => x.id === id);
+    return acc + (found?.xp || 50);
+  }, 0);
+  document.getElementById('drawer-xp-text').textContent = `${earnedXp.toLocaleString()} XP Earned`;
+}
+
+// Render Stepper Dots for Current Chapter
+function renderStepper() {
+  const currentLesson = flatLessons[currentIndex];
+  if (!currentLesson) return;
+
+  playerChapterTitle.textContent = currentLesson.chapterTitle || 'Outline';
+
+  // Find all lessons in this chapter
+  const chapterLessons = flatLessons.filter(l => l.chapterId === currentLesson.chapterId);
+  stepperContainer.innerHTML = chapterLessons.map(l => {
+    const isDone = completed.has(l.id);
+    const isActive = l.id === currentLesson.id;
+    const icon = l.type === 'video' ? '<i class="bi bi-play-fill" style="font-size:12px"></i>' : (l.type === 'quiz' ? '?' : (l.type === 'exam' ? '<i class="bi bi-file-earmark-check-fill" style="font-size:12px"></i>' : '&lt;/&gt;'));
+    return `
+      <div class="dc-step-dot ${isDone ? 'completed' : ''} ${isActive ? 'active' : ''}" data-id="${l.id}" title="${l.title} (${l.type})">
+        ${isDone ? '<i class="bi bi-check" style="font-size:15px;font-weight:900"></i>' : icon}
+      </div>`;
+  }).join('');
+
+  stepperContainer.querySelectorAll('.dc-step-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetIdx = flatLessons.findIndex(x => x.id === dot.dataset.id);
+      if (targetIdx >= 0) goToLesson(targetIdx);
+    });
+  });
+}
+
+// Setup Monaco Editor
+function setupMonaco() {
+  require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+  require(['vs/editor/editor.main'], function() {
+    monacoReady = true;
+    const starterCode = flatLessons[currentIndex]?.starterCode || '# Write your code here\n';
+    editor = monaco.editor.create(document.getElementById('monaco'), {
+      value: starterCode,
+      language: currentLang === 'javascript' ? 'javascript' : 'python',
+      theme: 'vs-dark',
+      fontSize: 13.5,
+      fontFamily: "'JetBrains Mono', monospace",
+      minimap: { enabled: false },
+      automaticLayout: true,
+      scrollBeyondLastLine: false,
+      padding: { top: 14, bottom: 14 },
+      lineNumbersMinChars: 3
+    });
+
+    // Keyboard shortcut: Ctrl+Enter or Cmd+Enter to submit
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+      submitAnswer();
+    });
+    // Shift+Enter to run
+    editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+      runCode();
+    });
+  });
+}
+
+// Language buttons
+document.getElementById('btn-lang-python').addEventListener('click', () => switchLanguage('python'));
+document.getElementById('btn-lang-js').addEventListener('click', () => switchLanguage('javascript'));
+
+function switchLanguage(lang) {
+  currentLang = lang;
+  document.getElementById('btn-lang-python').classList.toggle('active', lang === 'python');
+  document.getElementById('btn-lang-js').classList.toggle('active', lang === 'javascript');
+  document.getElementById('editor-file-name').textContent = lang === 'javascript' ? 'script.js' : 'script.py';
+  document.getElementById('editor-lang-icon').src = lang === 'javascript'
+    ? 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg'
+    : 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg';
+
+  if (editor && monacoReady) {
+    monaco.editor.setModelLanguage(editor.getModel(), lang === 'javascript' ? 'javascript' : 'python');
+  }
+}
+
+// Reset starter code
+document.getElementById('btn-reset-code').addEventListener('click', () => {
+  const currentLesson = flatLessons[currentIndex];
+  if (currentLesson && editor) {
+    editor.setValue(currentLesson.starterCode || '');
+    toast('Code reset to default');
+  }
+});
+
+// Clear console
+document.getElementById('btn-clear-console').addEventListener('click', () => {
+  consoleOutput.innerHTML = '<span style="color:#64748b">Console cleared.</span>';
+});
+
+// Hint Accordion toggle
+const hintAccordion = document.getElementById('hint-accordion');
+const hintToggle = document.getElementById('hint-toggle');
+const hintChevron = document.getElementById('hint-chevron');
+const showSolutionBtn = document.getElementById('show-solution-btn');
+const solutionBox = document.getElementById('solution-box');
+
+hintToggle.addEventListener('click', () => {
+  hintAccordion.classList.toggle('open');
+  hintChevron.className = hintAccordion.classList.contains('open') ? 'bi bi-chevron-up' : 'bi bi-chevron-down';
+});
+showSolutionBtn.addEventListener('click', () => {
+  solutionBox.style.display = solutionBox.style.display === 'none' ? 'block' : 'none';
+});
+
+// Switch to a Lesson
+function goToLesson(idx) {
+  if (idx < 0 || idx >= flatLessons.length) return;
+  currentIndex = idx;
+  const l = flatLessons[idx];
+
+  // Update navigation counters
+  navLessonCounter.textContent = `Lesson ${idx + 1} of ${flatLessons.length}`;
+  btnNavPrev.disabled = idx === 0;
+
+  // Render Stepper and Drawer
+  renderStepper();
+  renderDrawerChapters();
+
+  // Switch workspace view
+  if (l.type === 'video') {
+    exerciseView.style.display = 'none';
+    quizView.style.display = 'none';
+    videoView.style.display = 'block';
+
+    renderVideoLesson(l);
+    btnPlayerRun.style.display = 'none';
+    btnPlayerSubmit.innerHTML = `Continue to Next <i class="bi bi-arrow-right"></i>`;
+  } else if (l.type === 'quiz') {
+    exerciseView.style.display = 'none';
+    videoView.style.display = 'none';
+    quizView.style.display = 'block';
+
+    renderQuizLesson(l);
+    btnPlayerRun.style.display = 'none';
+    btnPlayerSubmit.style.display = 'none';
+  } else if (l.type === 'exam') {
+    videoView.style.display = 'none';
+    quizView.style.display = 'none';
+    exerciseView.style.display = 'grid';
+    renderExamLesson(l);
+    btnPlayerRun.style.display = 'inline-flex';
+    btnPlayerSubmit.style.display = 'inline-flex';
+    btnPlayerSubmit.innerHTML = `<i class="bi bi-patch-check-fill"></i> Submit Exam <span class="dc-btn-hint" style="font-size:11px;opacity:0.8;font-weight:600">(60 min)</span>`;
+  } else {
+    // Coding Exercise
+    videoView.style.display = 'none';
+    quizView.style.display = 'none';
+    exerciseView.style.display = 'grid';
+
+    renderExerciseLesson(l);
+    btnPlayerRun.style.display = 'inline-flex';
+    btnPlayerSubmit.style.display = 'inline-flex';
+    btnPlayerSubmit.innerHTML = `<i class="bi bi-check2-circle"></i> Submit Answer <span class="dc-btn-hint" style="font-size:11px;opacity:0.8;font-weight:600">(Ctrl+Enter)</span>`;
+  }
+}
+
+// Markdown and formatting helpers
+function formatMarkdown(str, theme) {
+  if (!str) return '';
+  let out = escapeHTML(str);
+  // **bold** — white on dark surfaces, dark on white paper (else invisible)
+  const strongColor = theme === 'paper' ? '#0f172a' : '#ffffff';
+  out = out.replace(/\*\*(.*?)\*\*/g, `<strong style="color:${strongColor};font-weight:700">$1</strong>`);
+  // `code`
+  out = out.replace(/`([^`]+)`/g, '<code style="background:#051424;border:1px solid #16365c;padding:2px 6px;border-radius:4px;color:#38bdf8;font-family:\'JetBrains Mono\',monospace;font-size:0.92em">$1</code>');
+  // newlines
+  out = out.replace(/\n\n/g, '<br/><br/>').replace(/\n/g, '<br/>');
+  return out;
+}
+
+function renderNotesList(notes, containerEl, previewCount) {
+  if (!containerEl) return;
+  const all = (notes || []).slice();
+  const parentCard = containerEl.closest('#ex-notes-card, #vid-notes-list, #quiz-notes-box');
+  if (!all.length) {
+    containerEl.innerHTML = '<div style="color:#94a3b8;font-style:italic;font-family:\'Inter\',system-ui,sans-serif;font-size:14px">No preset notes yet — add your own below.</div>';
+    containerEl.style.display = 'block';
+    if (parentCard) parentCard.style.display = 'block';
+    return;
+  }
+  if (parentCard) parentCard.style.display = 'block';
+  const n = previewCount || 6;
+  const shown = all.slice(0, n);
+  const hidden = all.slice(n);
+  const noteHTML = (list) => list.map(t => `
+    <p style="margin:0 0 12px 0; line-height:1.65; text-align:left; color:#1e293b; font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; font-size:14.5px">${formatMarkdown(t, 'paper')}</p>
+  `).join('');
+  let html = '';
+  if (hidden.length) {
+    html += `<div class="notes-summary"><span><i class="bi bi-journal-text"></i> ${all.length} lesson notes</span><button type="button" class="notes-toggle" data-action="expand"><i class="bi bi-chevron-down"></i> View all ${all.length}</button></div>`;
+  }
+  html += noteHTML(shown);
+  if (hidden.length) {
+    html += `<div class="notes-rest" style="display:none">${noteHTML(hidden)}</div>`;
+    html += `<button type="button" class="notes-toggle" data-action="expand" style="display:none"><i class="bi bi-chevron-down"></i> View all ${all.length} notes</button>`;
+    html += `<button type="button" class="notes-toggle" data-action="collapse" style="display:none"><i class="bi bi-chevron-up"></i> Show fewer</button>`;
+  }
+  containerEl.innerHTML = html;
+  containerEl.style.display = 'block';
+}
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.notes-toggle');
+  if (!btn) return;
+  // scope = the notebook card holding summary + rest + toggles (the top
+  // "View all" button lives inside .notes-summary, so parentElement is wrong)
+  const scope = btn.closest('.ios-notebook') || btn.parentElement;
+  if (!scope) return;
+  const rest = scope.querySelector('.notes-rest');
+  if (!rest) return;
+  const expand = btn.dataset.action === 'expand';
+  rest.style.display = expand ? 'block' : 'none';
+  scope.querySelectorAll('.notes-toggle').forEach(b => {
+    if (b.dataset.action === 'expand') b.style.display = expand ? 'none' : 'inline-flex';
+    if (b.dataset.action === 'collapse') b.style.display = expand ? 'inline-flex' : 'none';
+  });
+});
+
+// Render Video Lesson
+function renderVideoLesson(l) {
+  document.getElementById('vid-title').textContent = l.title;
+  document.getElementById('vid-meta').textContent = `${l.chapterTitle} • ${l.duration || '10 min'} • University of Zimbabwe Curriculum`;
+
+  // Tech Logo
+  const vidLogo = document.getElementById('vid-lesson-logo');
+  if (l.logo) {
+    vidLogo.src = l.logo;
+    vidLogo.style.display = 'block';
+  } else {
+    vidLogo.style.display = 'none';
+  }
+
+  const pool = ['rfscVS0vtbw', 'kqtD5dpn9C8', 'b1IK7RrOhI4', '8jLOx1hD3_o', 'PkZNo7MFNFg', 'BwuLxPH8IDs', 'grEKMHGYyns', 'HXV3zeQKqGY', '7eh4d6sabA0', 'VyWAvY2CF9c', 'F0GQ0l2N-Cw'];
+  const ytId = l.youtubeId || freecodecampVideos[course.id] || freecodecampVideos[course.slug] || pool[currentIndex % pool.length];
+  document.getElementById('vid-iframe').src = `https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1`;
+
+  document.getElementById('vid-notes').innerHTML = `<p>${formatMarkdown(l.content || 'In this lesson, we break down key concepts with step-by-step architectural diagrams and practical examples.')}</p>`;
+
+  // Structured bullet notes — iOS notebook (collapsible)
+  const vidNotesList = document.getElementById('vid-notes-list');
+  if(vidNotesList){
+    renderNotesList(l.notes, vidNotesList, 6);
+    if(!l.notes || !l.notes.length){
+      vidNotesList.innerHTML = '<div style="color:#94a3b8;font-style:italic;font-family:\'Inter\',system-ui,sans-serif;font-size:14px">No takeaways yet — jot your own.</div>';
+      vidNotesList.style.display = 'block';
+      const vCard = document.getElementById('vid-notes-list-card');
+      if(vCard) vCard.style.display = 'block';
+    }
+  }
+  const vidTa0 = document.getElementById('vid-personal-notes');
+  const vidStatus = document.getElementById('vid-notes-status');
+  const vidSave = document.getElementById('vid-notes-save');
+  if(vidTa0){
+    const vidTa = vidTa0.cloneNode(true);
+    vidTa0.parentNode.replaceChild(vidTa, vidTa0);
+    loadNotesInto(l.id, vidTa, vidStatus);
+    bindNotes(vidTa, l.id, vidStatus, vidSave);
+  }
+
+  // Revision box
+  const vidRevBox = document.getElementById('vid-revision-box');
+  const vidRevText = document.getElementById('vid-revision-text');
+  if (l.revision) {
+    vidRevBox.style.display = 'block';
+    vidRevText.innerHTML = formatMarkdown(l.revision);
+  } else {
+    vidRevBox.style.display = 'none';
+  }
+
+  // Related videos pills
+  const relatedRow = document.getElementById('vid-related-row');
+  const related = [ytId, 'rfscVS0vtbw', 'kqtD5dpn9C8'].slice(0, 3);
+  relatedRow.innerHTML = related.map(id => `
+    <a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:#051424;border:1px solid #16365c;border-radius:6px;text-decoration:none;color:#cbd5e1;font-size:11.5px;white-space:nowrap">
+      <i class="bi bi-play-circle-fill" style="color:red"></i> Watch on YouTube ↗
+    </a>`).join('');
+}
+
+// Render Quiz Lesson
+function renderQuizLesson(l) {
+  document.getElementById('quiz-title').textContent = l.title;
+  document.getElementById('quiz-question').innerHTML = formatMarkdown(l.question || 'Select the correct answer based on what you have learned:');
+  document.getElementById('quiz-xp-badge').textContent = `+${l.xp || 50} XP`;
+  document.getElementById('quiz-feedback').innerHTML = '';
+
+  // Tech Logo
+  const quizLogo = document.getElementById('quiz-lesson-logo');
+  if (l.logo) {
+    quizLogo.src = l.logo;
+    quizLogo.style.display = 'block';
+  } else {
+    quizLogo.style.display = 'none';
+  }
+
+  // Quiz notes — iOS notebook editable (always visible)
+  const qNotesBox = document.getElementById('quiz-notes-box');
+  const qNotesText = document.getElementById('quiz-notes-text');
+  if(qNotesBox) qNotesBox.style.display = 'block';
+  if(qNotesText){
+    if (l.notes && l.notes.length) {
+      renderNotesList(l.notes, qNotesText, 6);
+    } else if (l.revision) {
+      qNotesText.innerHTML = `<div style="line-height:1.65;color:#1e293b;text-align:left;font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14.5px">${formatMarkdown(l.revision, 'paper')}</div>`;
+      qNotesText.style.display = 'block';
+    } else {
+      qNotesText.innerHTML = '<div style="color:#94a3b8;font-style:italic;font-family:\'Inter\',system-ui,sans-serif;font-size:14px">Add your reasoning for this question.</div>';
+      qNotesText.style.display = 'block';
+    }
+  }
+  const qTa0 = document.getElementById('quiz-personal-notes');
+  const qStatus = document.getElementById('quiz-notes-status');
+  const qSave = document.getElementById('quiz-notes-save');
+  if(qTa0){
+    const qTa = qTa0.cloneNode(true);
+    qTa0.parentNode.replaceChild(qTa, qTa0);
+    loadNotesInto(l.id, qTa, qStatus);
+    bindNotes(qTa, l.id, qStatus, qSave);
+  }
+
+  const optsContainer = document.getElementById('quiz-options-container');
+  optsContainer.innerHTML = (l.options || []).map((opt, i) => `
+    <label style="display:flex;align-items:center;gap:14px;padding:16px 20px;background:rgba(255,255,255,0.04);border:none;border-radius:12px;cursor:pointer;transition:all .12s">
+      <input type="radio" name="dc-quiz" value="${i}" style="width:20px;height:20px;accent-color:var(--dc-green)"/>
+      <span style="font-size:15.5px;color:#e2e8f0;font-weight:500">${escapeHTML(opt)}</span>
+    </label>`).join('');
+
+  document.getElementById('btn-quiz-submit').onclick = async () => {
+    const selected = document.querySelector('input[name="dc-quiz"]:checked');
+    if (!selected) {
+      toast('Please choose an answer');
+      return;
+    }
+    const isCorrect = parseInt(selected.value) === l.answer;
+    const fb = document.getElementById('quiz-feedback');
+    if (isCorrect) {
+      fb.innerHTML = '<span style="color:var(--dc-green);display:flex;align-items:center;gap:6px"><i class="bi bi-check-circle-fill"></i> Correct! +50 XP awarded!</span>';
+      await markComplete(l, l.xp || 50);
+      setTimeout(() => goToLesson(currentIndex + 1), 900);
+    } else {
+      fb.innerHTML = '<span style="color:#f87171;display:flex;align-items:center;gap:6px"><i class="bi bi-x-circle-fill"></i> Not quite right. Re-read the question and try again!</span>';
+    }
+  };
+}
+
+// Render Exercise Lesson
+function renderExerciseLesson(l) {
+  document.getElementById('ex-title').textContent = l.title;
+  document.getElementById('ex-xp').textContent = `+${l.xp || 100} XP`;
+  const badgeEx = document.querySelector('#exercise-view .dc-exercise-badge');
+  if(badgeEx) badgeEx.innerHTML = `<i class="bi bi-code-slash"></i> EXERCISE`;
+
+  // Tech Logo
+  const exLogo = document.getElementById('ex-lesson-logo');
+  if (l.logo) {
+    exLogo.src = l.logo;
+    exLogo.style.display = 'block';
+    const editorLangIcon = document.getElementById('editor-lang-icon');
+    if (editorLangIcon) editorLangIcon.src = l.logo;
+  } else {
+    exLogo.style.display = 'none';
+  }
+
+  // Format narrative prose with markdown
+  const narrative = l.content || 'Follow the instructions below to complete the exercise in the interactive code editor.';
+  document.getElementById('ex-narrative').innerHTML = `<p>${formatMarkdown(narrative)}</p>`;
+
+  // Instructions checklist
+  document.getElementById('ex-instructions').innerHTML = l.instructions || 'Write your code in script.py and submit your answer.';
+
+  // Lecture notes / Cheat sheet — iOS notebook (collapsible)
+  const notesContainer = document.getElementById('ex-notes-list');
+  if(notesContainer){
+    renderNotesList(l.notes, notesContainer, 6);
+    if(!l.notes || !l.notes.length){
+      notesContainer.innerHTML = '<div style="color:#94a3b8;font-style:italic;font-family:\'Inter\',system-ui,sans-serif;font-size:14px">No preset notes — add your own below.</div>';
+      notesContainer.style.display = 'block';
+    }
+  }
+  // Editable personal notebook per lesson
+  const exTa0 = document.getElementById('ex-personal-notes');
+  const exStatus = document.getElementById('ex-notes-status');
+  const exSave = document.getElementById('ex-notes-save');
+  if(exTa0){
+    const exTa = exTa0.cloneNode(true);
+    exTa0.parentNode.replaceChild(exTa, exTa0);
+    loadNotesInto(l.id, exTa, exStatus);
+    bindNotes(exTa, l.id, exStatus, exSave);
+  }
+
+  // Hints and solutions
+  document.getElementById('hint-text').textContent = l.hint || 'Review the instructions carefully and test your logic step by step.';
+  solutionBox.textContent = l.solution || '# Solution unavailable';
+  solutionBox.style.display = 'none';
+  hintAccordion.classList.remove('open');
+  hintChevron.className = 'bi bi-chevron-down';
+
+  // Reflection / Concept Check
+  const reflectText = l.questions && l.questions[0] ? l.questions[0].q : (l.revision || `How does ${l.title} relate to real-world production pipelines?`);
+  document.getElementById('ex-reflection-text').textContent = reflectText;
+
+  // Faculty Revision Box
+  const exRevBox = document.getElementById('ex-revision-box');
+  const exRevText = document.getElementById('ex-revision-text');
+  if (l.revision) {
+    exRevBox.style.display = 'block';
+    exRevText.innerHTML = formatMarkdown(l.revision);
+  } else {
+    exRevBox.style.display = 'none';
+  }
+
+  // Language & Monaco starter code
+  const lang = l.language || 'python';
+  switchLanguage(lang);
+  if (editor && monacoReady) {
+    editor.setValue(l.starterCode || '# Write your code here\n');
+  }
+}
+
+// Render Practical Exam Lesson — reuses exercise pane, exam styling
+function renderExamLesson(l){
+  document.getElementById('ex-title').textContent = l.title;
+  document.getElementById('ex-xp').textContent = `+${l.xp || 500} XP`;
+  const badge = document.querySelector('#exercise-view .dc-exercise-badge');
+  if(badge) badge.innerHTML = `<i class="bi bi-file-earmark-check-fill" style="color:#ff5555"></i> PRACTICAL EXAM`;
+  const exLogo = document.getElementById('ex-lesson-logo');
+  if (l.logo) {
+    exLogo.src = l.logo;
+    exLogo.style.display = 'block';
+    const editorLangIcon = document.getElementById('editor-lang-icon');
+    if (editorLangIcon) editorLangIcon.src = l.logo;
+  } else {
+    exLogo.style.display = 'none';
+  }
+  document.getElementById('ex-narrative').innerHTML = `<p>${formatMarkdown(l.content || l.instructions || '')}</p>`;
+  document.getElementById('ex-instructions').innerHTML = l.instructions || 'Complete the practical exam. Implement solve() and submit.';
+  const notesContainer = document.getElementById('ex-notes-list');
+  if(notesContainer){
+    if(l.notes && l.notes.length){
+      notesContainer.innerHTML = l.notes.map(note => `<p style="margin:0 0 12px 0; line-height:1.65; text-align:left; color:#1e293b; font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; font-size:14.5px">${formatMarkdown(note, 'paper')}</p>`).join('');
+      notesContainer.style.display = 'block';
+    } else {
+      notesContainer.innerHTML = '<div style="color:#94a3b8;font-style:italic;font-family:\'Inter\',system-ui,sans-serif;font-size:14px">No preset notes — add your own below.</div>';
+    }
+  }
+  const exTa0 = document.getElementById('ex-personal-notes');
+  const exStatus = document.getElementById('ex-notes-status');
+  const exSave = document.getElementById('ex-notes-save');
+  if(exTa0){
+    const exTa = exTa0.cloneNode(true);
+    exTa0.parentNode.replaceChild(exTa, exTa0);
+    loadNotesInto(l.id, exTa, exStatus);
+    bindNotes(exTa, l.id, exStatus, exSave);
+  }
+  document.getElementById('hint-text').textContent = l.hint || 'This is a timed practical (60 min). Review your 50 lines of handwriting notes before submitting.';
+  solutionBox.textContent = l.solution || '# Solution hidden until submission';
+  solutionBox.style.display = 'none';
+  hintAccordion.classList.remove('open');
+  hintChevron.className = 'bi bi-chevron-down';
+  document.getElementById('ex-reflection-text').textContent = l.questions && l.questions[0] ? l.questions[0].q : (l.revision || `How does ${l.title} demonstrate mastery?`);
+  const exRevBox = document.getElementById('ex-revision-box');
+  const exRevText = document.getElementById('ex-revision-text');
+  if (l.revision) {
+    exRevBox.style.display = 'block';
+    exRevText.innerHTML = formatMarkdown(l.revision);
+  } else {
+    exRevBox.style.display = 'none';
+  }
+  const lang = l.language || 'python';
+  switchLanguage(lang);
+  if (editor && monacoReady) {
+    editor.setValue(l.starterCode || '# Practical Exam — write your solution\\n');
+  }
+}
+
+// Mark Lesson Completed & Sync
+async function markComplete(lesson, xp) {
+  if (completed.has(lesson.id)) return;
+  completed.add(lesson.id);
+
+  try {
+    const res = await fetchJSON('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: getUserId(),
+        courseId: course.id,
+        lessonId: lesson.id,
+        xp: xp || lesson.xp || 50,
+        chapterId: lesson.chapterId
+      })
+    });
+    xpBadge.innerHTML = `<i class="bi bi-lightning-charge-fill"></i> ${(res.xp || 0).toLocaleString()} XP`;
+  } catch (e) {
+    console.warn('Sync progress error', e);
+  }
+
+  renderStepper();
+  renderDrawerChapters();
+  toast(`🎉 +${xp} XP Earned!`);
+}
+
+// Run Code
+async function runCode() {
+  const code = editor ? editor.getValue() : '';
+  const currentLesson = flatLessons[currentIndex];
+  consoleOutput.innerHTML = '<span style="color:#38bdf8"><i class="bi bi-hourglass-split"></i> Running code in sandbox...</span>';
+
+  try {
+    const res = await fetchJSON('/api/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code,
+        language: currentLang,
+        expected: currentLesson?.tests?.[0]?.expected
+      })
+    });
+
+    if (res.success) {
+      consoleOutput.innerHTML = `
+        <div style="color:var(--dc-green);font-weight:700">In [1]: ▶ Output:</div>
+        <div style="white-space:pre-wrap;color:#f8fafc;margin:6px 0 10px 0">${escapeHTML(res.output)}</div>
+        ${res.passed ? '<div style="color:var(--dc-green);font-weight:700">✓ Output matches expected test pattern</div>' : '<div style="color:#fbbf24;font-size:12px">ℹ Code ran without syntax errors. Check instructions to verify all requirements.</div>'}
+      `;
+    } else {
+      consoleOutput.innerHTML = `
+        <div style="color:#f87171;font-weight:700">✗ Execution Error:</div>
+        <div style="color:#fca5a5;white-space:pre-wrap;margin-top:6px">${escapeHTML(res.error || 'Syntax or runtime error')}</div>
+      `;
+    }
+  } catch (err) {
+    consoleOutput.innerHTML = `<span style="color:#f87171">Network error connecting to runner service.</span>`;
+  }
+}
+
+// Submit Answer
+async function submitAnswer() {
+  const currentLesson = flatLessons[currentIndex];
+  if (!currentLesson) return;
+
+  if (currentLesson.type === 'video') {
+    await markComplete(currentLesson, 20);
+    goToLesson(currentIndex + 1);
+    return;
+  }
+
+  if (currentLesson.type !== 'exercise') return;
+
+  const code = editor ? editor.getValue() : '';
+  if (code.trim() === (currentLesson.starterCode || '').trim()) {
+    toast('Please write your solution before submitting.');
+    return;
+  }
+
+  consoleOutput.innerHTML = '<span style="color:#38bdf8"><i class="bi bi-hourglass-split"></i> Evaluating submission against test cases...</span>';
+
+  try {
+    const res = await fetchJSON('/api/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code,
+        language: currentLang,
+        expected: currentLesson?.tests?.[0]?.expected
+      })
+    });
+
+    if (!res.success) {
+      consoleOutput.innerHTML = `
+        <div style="color:#f87171;font-weight:700">✗ Test Failed:</div>
+        <div style="color:#fca5a5;margin-top:6px">${escapeHTML(res.error || 'Syntax or runtime error')}</div>
+      `;
+      toast('Fix errors before submitting');
+      return;
+    }
+
+    const expected = (currentLesson?.tests?.[0]?.expected || '').toLowerCase();
+    const out = (res.output || '').toLowerCase();
+    const passed = (expected && out.includes(expected)) || (res.passed !== false && out.length > 0);
+
+    if (passed) {
+      consoleOutput.innerHTML = `
+        <div style="color:var(--dc-green);font-weight:700">In [1]: ▶ Output:</div>
+        <div style="white-space:pre-wrap;color:#f8fafc;margin:6px 0 10px 0">${escapeHTML(res.output)}</div>
+        <div style="padding:10px 14px;background:rgba(3,239,98,0.1);border:1px solid rgba(3,239,98,0.3);border-radius:6px;color:var(--dc-green);font-weight:700">
+          🎉 Correct! Well done! +${currentLesson.xp || 100} XP awarded. Advancing to next lesson...
+        </div>
+      `;
+      await markComplete(currentLesson, currentLesson.xp || 100);
+      setTimeout(() => goToLesson(currentIndex + 1), 1100);
+    } else {
+      consoleOutput.innerHTML = `
+        <div style="color:var(--dc-green)">In [1]: ▶ Output:</div>
+        <div style="white-space:pre-wrap;color:#f8fafc;margin:6px 0 10px 0">${escapeHTML(res.output)}</div>
+        <div style="padding:10px 14px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:6px;color:#fbbf24;font-size:13px">
+          ⚠ Output did not match expected solution: <b>${escapeHTML(expected || 'valid return output')}</b>. Click "Need a hint?" if you're stuck!
+        </div>
+      `;
+      toast('Output differs from expected');
+    }
+  } catch (err) {
+    consoleOutput.innerHTML = `<span style="color:#f87171">Network error during evaluation.</span>`;
+  }
+}
+
+function escapeHTML(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Navigation Listeners
+btnNavPrev.addEventListener('click', () => goToLesson(currentIndex - 1));
+btnPlayerRun.addEventListener('click', runCode);
+btnPlayerSubmit.addEventListener('click', submitAnswer);
+
+// Global shortcut for Ctrl+Enter anywhere on page
+window.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    submitAnswer();
+  }
+});
+
+// Start
+init();
+</script>
+</body>
+</html>
