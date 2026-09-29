@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>HBC AI — Heritage-Based Curriculum Tutor</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=5">
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="side" id="sidebar">
+    <div class="side-top">
+      <button class="iconbtn d-md-none" id="sideClose" aria-label="Close">✕</button>
+      <div class="brand"><span class="logo">H</span><span>HBC AI <small>2024–30</small></span></div>
+      <button class="newchat" id="newChat"><i class="bi bi-pencil-square me-2"></i>New chat</button>
+    </div>
+
+    <div class="side-label">Library</div>
+    <nav class="lib">
+      <button data-view="quiz"><i class="bi bi-patch-check me-2"></i>Practice quiz</button>
+      <button data-view="resources"><i class="bi bi-grid me-2"></i>Study resources</button>
+      <button data-view="parent"><i class="bi bi-people me-2"></i>Parents & teachers</button>
+    </nav>
+
+    <div class="side-label">Recent chats</div>
+    <div class="chats" id="chatList"><p class="empty">No chats yet — ask something below.</p></div>
+
+    <div class="side-bottom">
+      <label class="form-label" for="level">Grade / Form</label>
+      <select id="level" class="form-select form-select-sm mb-2"><option value="g5">Grade 5</option></select>
+      <label class="form-label" for="subject">Learning area</label>
+      <select id="subject" class="form-select form-select-sm mb-2"><option>Mathematics</option></select>
+      <div class="seg seg-sm mb-2" id="langSeg">
+        <button data-lang="en" class="on">EN</button>
+        <button data-lang="sn">SN</button>
+        <button data-lang="nd">ND</button>
+      </div>
+      <div class="statusline"><span class="dot" id="aiDot"></span><span id="aiStatus">Connecting…</span></div>
+    </div>
+  </aside>
+  <div class="backdrop" id="backdrop"></div>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="top">
+      <button class="iconbtn" id="menuBtn" aria-label="Menu">☰</button>
+      <span class="top-title" id="chatTitle">New chat</span>
+      <span class="badge-mode">Tutor mode · no direct answers</span>
+      <button class="iconbtn" id="themeBtn" title="Dark mode"><i class="bi bi-moon"></i></button>
+      <button class="iconbtn" id="topNew" title="New chat"><i class="bi bi-pencil-square"></i></button>
+    </header>
+
+    <!-- chat view -->
+    <section class="view" id="view-chat">
+      <div class="thread" id="chat"></div>
+      <div class="empty-state" id="welcome">
+        <h1>What can I help with?</h1>
+        <p class="sub">HBC tutor · ECD → A-Level · English · Shona · Ndebele</p>
+        <div class="topics-line" id="topics"></div>
+        <div class="sugs">
+          <button data-q="Solve 3/4 + 1/8. Guide me step by step."><b>Mathematics</b><span>Fractions: ¾ + ⅛</span></button>
+          <button data-q="Help me plan my SBP for this term"><b>School project</b><span>Plan my SBP</span></button>
+          <button data-q="Help me start my Shona rondedzero composition"><b>Rondedzero</b><span>Shona essay frame</span></button>
+          <button data-q="Why is Great Zimbabwe important in our heritage?"><b>Heritage</b><span>Great Zimbabwe</span></button>
+        </div>
+      </div>
+      <div class="composer">
+        <div class="composer-inner">
+          <textarea id="q" rows="1" placeholder="Message HBC Tutor…"></textarea>
+          <button class="send" id="askBtn" aria-label="Send"><i class="bi bi-arrow-up"></i></button>
+        </div>
+        <div class="hint">Tutor mode: guided steps · ZIMSEC-style practice · SBP planning</div>
+      </div>
+    </section>
+
+    <!-- quiz view -->
+    <section class="view hidden" id="view-quiz">
+      <div class="panel">
+        <h2>Practice quiz</h2>
+        <p class="muted">ZIMSEC-style questions for your current learning area.</p>
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          <button class="btn btn-dark rounded-pill px-4" id="newQuiz">New quiz</button>
+          <button class="btn btn-outline-dark rounded-pill px-4" id="markQuiz">Mark quiz</button>
+        </div>
+        <div id="quizBox"></div>
+      </div>
+    </section>
+
+    <!-- resources view -->
+    <section class="view hidden" id="view-resources">
+      <div class="panel">
+        <h2>Study resources</h2>
+        <p class="muted" id="hbcNote">Checked links: official HBC + practice.</p>
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          <select id="resGroup" class="form-select w-auto">
+            <option value="all">All groups</option><option>Official HBC</option><option>HBC explainers</option>
+            <option>HBC-aligned materials</option><option>Notes & past papers</option><option>Free Android apps</option><option>Caution</option>
+          </select>
+          <select id="resFilter" class="form-select w-auto">
+            <option value="all">HBC + practice</option><option value="true">HBC-aligned only</option><option value="practice">Practice / pre-HBC</option>
+          </select>
+          <button class="btn btn-outline-dark rounded-pill" id="printRes"><i class="bi bi-printer me-1"></i>Print</button>
+        </div>
+        <div id="resBox"></div>
+      </div>
+    </section>
+
+    <!-- parents view -->
+    <section class="view hidden" id="view-parent">
+      <div class="panel">
+        <h2>Parents & teachers <small class="text-muted">· Vabereki / Abazali</small></h2>
+        <div class="info-grid" id="parentCards"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="app.js?v=6"></script>
+</body>
+</html>

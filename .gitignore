@@ -15,3 +15,5 @@ academy/server/data/progress.json
 academy/server/data/tracking.json
 academy/server/data/users.json
 academy/server/data/qualifications.json
+# HBC Homework AI runtime sessions (learner questions - keep private)
+/HBC Homework ai/server/data/*.json
